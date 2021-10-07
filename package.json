@@ -1,6 +1,6 @@
 {
     "name": "spa-router-vir",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "homepage": "https://github.com/electrovir/spa-router-vir",
     "bugs": {
         "url": "https://github.com/electrovir/spa-router-vir/issues"
@@ -25,12 +25,12 @@
     },
     "dependencies": {
         "augment-vir": "^1.0.0",
-        "lit": "^2.0.0",
-        "virmator": "^1.2.0"
+        "lit": "^2.0.0"
     },
     "devDependencies": {
         "@snowpack/plugin-typescript": "^1.2.1",
         "element-vir": "^2.0.0",
-        "snowpack": "^3.8.8"
+        "snowpack": "^3.8.8",
+        "virmator": "^1.2.0"
     }
 }
