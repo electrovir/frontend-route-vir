@@ -1,0 +1,8 @@
+{
+    "compilerOptions": {
+        "moduleResolution": "node",
+        // override keyword doesn't work with snowpack
+        "noImplicitOverride": false
+    },
+    "extends": "./tsconfig-base.json"
+}
