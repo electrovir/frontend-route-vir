@@ -1,6 +1,6 @@
 {
     "name": "spa-router-vir",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "homepage": "https://github.com/electrovir/spa-router-vir",
     "bugs": {
         "url": "https://github.com/electrovir/spa-router-vir/issues"
@@ -13,6 +13,8 @@
         "name": "electrovir",
         "url": "https://github.com/electrovir"
     },
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
     "scripts": {
         "format": "virmator format write",
         "prepublishOnly": "npm run test:full",
