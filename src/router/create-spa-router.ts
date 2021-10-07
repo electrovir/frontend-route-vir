@@ -21,6 +21,7 @@ export function createSpaRouter<ValidRoutes extends string[]>(
 
     const router: SpaRouter<ValidRoutes> = {
         listeners: new Set(),
+        initParams: init,
         sanitizeRoutes: (routes) => {
             return init.routeSanitizer
                 ? init.routeSanitizer(routes)

@@ -1,6 +1,23 @@
+import {RouterInitParams} from './router-init-params';
 export type RouteListener<ValidRoutes extends string[]> = (routes: Readonly<ValidRoutes>) => void;
 
 export type SpaRouter<ValidRoutes extends string[]> = {
+    addRouteListener: (
+        fireImmediately: boolean,
+        listener: RouteListener<ValidRoutes>,
+    ) => RouteListener<ValidRoutes>;
+    createRoutesUrl: (routes: Readonly<ValidRoutes>) => string;
+    getCurrentRawRoutes: () => Readonly<string[]>;
+    initParams: Readonly<RouterInitParams<ValidRoutes>>;
+    listeners: Set<RouteListener<ValidRoutes>>;
+    /** Used to track route sanitization depth to prevent infinite sanitizing loops. */
+    sanitizationDepth: number;
+    removeRouteListener: (listenerToRemove: RouteListener<ValidRoutes>) => boolean;
+    /**
+     * Used to sanitize routes. Uses the user input sanitizer. If the user did not assign any input
+     * sanitizer to the init parameters, this simply returns the inputs.
+     */
+    sanitizeRoutes: (routes: Readonly<string[]> | Readonly<ValidRoutes>) => Readonly<ValidRoutes>;
     setRoutes: (
         routes: Readonly<ValidRoutes>,
         /**
@@ -14,21 +31,6 @@ export type SpaRouter<ValidRoutes extends string[]> = {
          */
         force?: boolean,
     ) => void;
-    createRoutesUrl: (routes: Readonly<ValidRoutes>) => string;
-    addRouteListener: (
-        fireImmediately: boolean,
-        listener: RouteListener<ValidRoutes>,
-    ) => RouteListener<ValidRoutes>;
-    getCurrentRawRoutes: () => Readonly<string[]>;
-    listeners: Set<RouteListener<ValidRoutes>>;
-    /** Used to track route sanitization depth to prevent infinite sanitizing loops. */
-    sanitizationDepth: number;
-    /**
-     * Used to sanitize routes. Uses the user input sanitizer. If the user did not assign any input
-     * sanitizer to the init parameters, this simply returns the inputs.
-     */
-    sanitizeRoutes: (routes: Readonly<string[]> | Readonly<ValidRoutes>) => Readonly<ValidRoutes>;
-    removeRouteListener: (listenerToRemove: RouteListener<ValidRoutes>) => boolean;
 };
 
 // some actual JavaScript is needed so this file gets picked up in compilation lol
@@ -45,6 +47,7 @@ export function isSpaRouter(rawInput: unknown): rawInput is SpaRouter<any> {
         sanitizationDepth: 'number',
         sanitizeRoutes: 'function',
         removeRouteListener: 'function',
+        initParams: 'object',
     };
 
     const input = rawInput as SpaRouter<any>;
