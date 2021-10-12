@@ -27,18 +27,15 @@ export type RouterInitParams<ValidRoutes extends string[]> = {
      * no maximum listener count. When set to a truthy number, the maximum comes into effect.
      */
     maxListenerCount?: number | undefined;
-    defaultRoute: Readonly<ValidRoutes>;
 };
 
 // some actual JavaScript is needed so this file gets picked up in compilation lol
 export function createRouteInitParams<ValidRoutes extends string[]>(
-    defaultRoute: Readonly<ValidRoutes>,
     routeBase?: string,
     routeSanitizer?: RouteSanitizerCallback<ValidRoutes>,
     maxListenerCount?: number,
 ): RouterInitParams<ValidRoutes> {
     const routerInitParams: RouterInitParams<ValidRoutes> = {
-        defaultRoute,
         routeBase,
         maxListenerCount,
         routeSanitizer,
@@ -83,18 +80,6 @@ export function assertValidRouteInitParams<ValidRoutes extends string[]>(
             `Invalid type for router init params "maxListenerCount" property. Expected a number or undefined but got "${
                 input.maxListenerCount
             }" with type "${typeof input.maxListenerCount}".`,
-        );
-    }
-
-    if (
-        !input.defaultRoute ||
-        !Array.isArray(input.defaultRoute) ||
-        !input.defaultRoute.every((route) => typeof route === 'string')
-    ) {
-        throw new InvalidRouterInitParamsError(
-            `Invalid type for router init params "defaultRoute" property. Expected an array of strings but got "${
-                input.defaultRoute
-            }" with type "${typeof input.defaultRoute}".`,
         );
     }
 }

@@ -7,8 +7,8 @@ import {assertValidRouteInitParams, RouterInitParams} from './router-init-params
 import {createPathString, setRoutes} from './set-route';
 import {SpaRouter} from './spa-router';
 
-export function createSpaRouter<ValidRoutes extends string[]>(
-    init: Readonly<RouterInitParams<ValidRoutes>>,
+export function createSpaRouter<ValidRoutes extends string[] = string[]>(
+    init: Readonly<RouterInitParams<ValidRoutes>> = {},
 ): SpaRouter<ValidRoutes> {
     assertValidRouteInitParams(init);
     consolidateWindowEvents();

@@ -29,5 +29,4 @@ export const testRouter = createSpaRouter<TestRoutes>({
 
         return sanitizedRoutes;
     },
-    defaultRoute,
 });
