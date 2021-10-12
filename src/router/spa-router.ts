@@ -3,6 +3,11 @@ export type RouteListener<ValidRoutes extends string[]> = (routes: Readonly<Vali
 
 export type SpaRouter<ValidRoutes extends string[]> = {
     addRouteListener: (
+        /**
+         * Immediately fire the listener callback once its attached. This prevents you from needing
+         * to manually fire the callback to update all route-specific content on page load since
+         * initial page load will not fire any listeners because the JavaScript hasn't loaded yet!
+         */
         fireImmediately: boolean,
         listener: RouteListener<ValidRoutes>,
     ) => RouteListener<ValidRoutes>;
@@ -18,6 +23,10 @@ export type SpaRouter<ValidRoutes extends string[]> = {
      * sanitizer to the init parameters, this simply returns the inputs.
      */
     sanitizeRoutes: (routes: Readonly<string[]> | Readonly<ValidRoutes>) => Readonly<ValidRoutes>;
+    /**
+     * Manually update the current route. This will fire event listeners once the browser URL update
+     * is finalized and the browser fires its relevant events.
+     */
     setRoutes: (
         routes: Readonly<ValidRoutes>,
         /**

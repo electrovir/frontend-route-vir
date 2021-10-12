@@ -1,6 +1,6 @@
 {
     "name": "spa-router-vir",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "homepage": "https://github.com/electrovir/spa-router-vir",
     "bugs": {
         "url": "https://github.com/electrovir/spa-router-vir/issues"
@@ -16,20 +16,22 @@
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "scripts": {
+        "docs": "md-code README.md",
         "format": "virmator format write",
         "prepublishOnly": "npm run test:full",
         "spellcheck": "virmator spellcheck",
         "start": "snowpack dev",
         "test": "virmator compile",
-        "test:full": "npm test && npm run spellcheck && virmator format check"
+        "test:full": "npm test && npm run spellcheck && virmator format check && md-code --check README.md"
     },
     "dependencies": {
         "augment-vir": "^1.0.0",
-        "lit": "^2.0.0"
+        "lit": "^2.0.2"
     },
     "devDependencies": {
         "@snowpack/plugin-typescript": "^1.2.1",
         "element-vir": "^2.0.0",
+        "markdown-code-example-inserter": "^0.1.1",
         "snowpack": "^3.8.8",
         "virmator": "^1.2.0"
     }

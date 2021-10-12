@@ -13,7 +13,6 @@ export type TestRoutes = [MainRoute] | [MainRoute, string];
 const defaultRoute: TestRoutes = [MainRoute.Home, 'main'];
 
 export const testRouter = createSpaRouter<TestRoutes>({
-    routeBase: '',
     routeSanitizer: (routes) => {
         if (!routes || !routes.length) {
             return defaultRoute;

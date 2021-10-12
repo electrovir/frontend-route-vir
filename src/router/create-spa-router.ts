@@ -9,7 +9,7 @@ import {SpaRouter} from './spa-router';
 
 export function createSpaRouter<ValidRoutes extends string[] = string[]>(
     init: Readonly<RouterInitParams<ValidRoutes>> = {},
-): SpaRouter<ValidRoutes> {
+): Readonly<SpaRouter<ValidRoutes>> {
     assertValidRouteInitParams(init);
     consolidateWindowEvents();
     const startsWithRouteBaseRegExp: RegExp | undefined = init.routeBase
