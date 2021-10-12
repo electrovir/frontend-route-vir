@@ -17,3 +17,4 @@ tsconfig.json
 static/
 dist/test/
 snowpack.config.mjs
+dist/readme-examples/
