@@ -19,15 +19,17 @@ export type SpaRouter<
          * initial page load will not fire any listeners because the JavaScript hasn't loaded yet!
          */
         fireImmediately: boolean,
-        listener: RouteListener<ValidRoutes>,
-    ) => RouteListener<ValidRoutes>;
+        listener: RouteListener<ValidRoutes, ValidSearch, ValidHash>,
+    ) => RouteListener<ValidRoutes, ValidSearch, ValidHash>;
     createRoutesUrl: (routes: Readonly<FullRoute>) => string;
     getCurrentRawRoutes: () => Readonly<FullRoute>;
     initParams: Readonly<RouterInitParams<ValidRoutes, ValidSearch, ValidHash>>;
-    listeners: Set<RouteListener<ValidRoutes>>;
+    listeners: Set<RouteListener<ValidRoutes, ValidSearch, ValidHash>>;
     /** Used to track route sanitization depth to prevent infinite sanitizing loops. */
     sanitizationDepth: number;
-    removeRouteListener: (listenerToRemove: RouteListener<ValidRoutes>) => boolean;
+    removeRouteListener: (
+        listenerToRemove: RouteListener<ValidRoutes, ValidSearch, ValidHash>,
+    ) => boolean;
     /**
      * Used to sanitize routes. Uses the user input sanitizer. If the user did not assign any input
      * sanitizer to the init parameters, this simply returns the inputs.

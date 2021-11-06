@@ -14,7 +14,7 @@ export function createSpaRouter<
     ValidHash extends string = string,
 >(
     init: Readonly<RouterInitParams<ValidRoutes, ValidSearch, ValidHash>> = {},
-): Readonly<SpaRouter<ValidRoutes>> {
+): Readonly<SpaRouter<ValidRoutes, ValidSearch, ValidHash>> {
     assertValidRouteInitParams(init);
 
     consolidateWindowEvents();
@@ -28,7 +28,7 @@ export function createSpaRouter<
     /** Only add one listener to the window event but only add it once addRouteListener has been called. */
     let windowListenerAdded = false;
 
-    const router: SpaRouter<ValidRoutes> = {
+    const router: SpaRouter<ValidRoutes, ValidSearch, ValidHash> = {
         listeners: new Set(),
         initParams: init,
         sanitizeFullRoute: (fullRoute) => {
