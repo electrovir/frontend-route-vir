@@ -3,10 +3,15 @@ import type {FullRoute} from './full-route';
 import {areRoutesEqual} from './route-equality';
 import {RouteListener, SpaRouter} from './spa-router';
 
-const maxSanitizationStackDepth = 2;
-export function routeChangeCallback<ValidRoutes extends string[]>(
-    router: SpaRouter<ValidRoutes>,
-    specificListenerOnly?: RouteListener<ValidRoutes>,
+// 2 sanitize depth allowed for each property: path, search, hash
+const maxSanitizationStackDepth = 6;
+export function routeChangeCallback<
+    ValidRoutes extends string[] = string[],
+    ValidSearch extends Record<string, string> = Record<string, string>,
+    ValidHash extends string = string,
+>(
+    router: SpaRouter<ValidRoutes, ValidSearch, ValidHash>,
+    specificListenerOnly?: RouteListener<ValidRoutes, ValidSearch, ValidHash>,
 ): void {
     const currentRoutes = router.getCurrentRawRoutes();
     if (router.sanitizationDepth > maxSanitizationStackDepth) {
@@ -17,7 +22,7 @@ export function routeChangeCallback<ValidRoutes extends string[]>(
         );
     }
 
-    const sanitizedCurrentRoutes: Readonly<FullRoute<ValidRoutes>> =
+    const sanitizedCurrentRoutes: Readonly<FullRoute<ValidRoutes, ValidSearch, ValidHash>> =
         router.sanitizeFullRoute(currentRoutes);
 
     if (areRoutesEqual(sanitizedCurrentRoutes, currentRoutes)) {

@@ -9,3 +9,4 @@ export * from './router/full-route';
 export * from './router/route-equality';
 export * from './router/router-init-params';
 export * from './router/spa-router';
+export * from './search-params';

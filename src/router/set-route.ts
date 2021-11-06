@@ -1,8 +1,9 @@
+import {objectToUrlSearchParams} from '../search-params';
 import {SpaRouterError} from './errors/spa-router.error';
 import type {FullRoute} from './full-route';
 
 export function setRoutes(
-    fullRoute: Readonly<FullRoute<string[]>>,
+    fullRoute: Readonly<FullRoute>,
     routeBaseRegExp: RegExp | undefined,
     routeBase?: string,
     /**
@@ -20,7 +21,7 @@ export function setRoutes(
 }
 
 export function createPathString(
-    fullRoute: Readonly<FullRoute<string[]>>,
+    fullRoute: Readonly<FullRoute>,
     routeBaseRegExp: RegExp | undefined,
     routeBase = '',
 ): string {
@@ -30,7 +31,9 @@ export function createPathString(
         );
     }
     const pathBase = doesWindowContainsRelativeBase(routeBaseRegExp) ? `/${routeBase}` : '';
-    const urlParamsString = fullRoute.search?.toString();
+    const urlParamsString = fullRoute.search
+        ? objectToUrlSearchParams(fullRoute.search).toString()
+        : '';
     const searchString = urlParamsString ? `?${urlParamsString}` : '';
 
     const hashStarter = fullRoute.hash?.startsWith('#') ? '' : '#';

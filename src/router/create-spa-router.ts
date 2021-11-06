@@ -8,8 +8,12 @@ import {assertValidRouteInitParams, RouterInitParams} from './router-init-params
 import {createPathString, setRoutes} from './set-route';
 import {SpaRouter} from './spa-router';
 
-export function createSpaRouter<ValidRoutes extends string[] = string[]>(
-    init: Readonly<RouterInitParams<ValidRoutes>> = {},
+export function createSpaRouter<
+    ValidRoutes extends string[] = string[],
+    ValidSearch extends Record<string, string> = Record<string, string>,
+    ValidHash extends string = string,
+>(
+    init: Readonly<RouterInitParams<ValidRoutes, ValidSearch, ValidHash>> = {},
 ): Readonly<SpaRouter<ValidRoutes>> {
     assertValidRouteInitParams(init);
 
@@ -30,12 +34,11 @@ export function createSpaRouter<ValidRoutes extends string[] = string[]>(
         sanitizeFullRoute: (fullRoute) => {
             return init.routeSanitizer
                 ? init.routeSanitizer(fullRoute)
-                : (fullRoute as Readonly<FullRoute<ValidRoutes>>);
+                : (fullRoute as Readonly<FullRoute<ValidRoutes, ValidSearch, ValidHash>>);
         },
         setRoutes: (fullRoute, replace = false, force = false) => {
-            console.log(fullRoute);
             const currentRoute = router.getCurrentRawRoutes();
-            const completeRoute: Readonly<FullRoute<string[]>> = {...currentRoute, ...fullRoute};
+            const completeRoute: Readonly<FullRoute> = {...currentRoute, ...fullRoute};
             const sanitizedRoute = router.sanitizeFullRoute(completeRoute);
 
             if (!force && areRoutesEqual(currentRoute, sanitizedRoute)) {

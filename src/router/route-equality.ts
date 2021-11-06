@@ -1,9 +1,6 @@
 import type {FullRoute} from './full-route';
 
-export function areRoutesEqual(
-    a: Readonly<FullRoute<string[]>>,
-    b: Readonly<FullRoute<string[]>>,
-): boolean {
+export function areRoutesEqual(a: Readonly<FullRoute>, b: Readonly<FullRoute>): boolean {
     if (a.paths.length !== b.paths.length) {
         return false;
     }

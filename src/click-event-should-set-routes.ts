@@ -24,9 +24,13 @@ export function shouldMouseEventTriggerRoutes(mouseEvent: MouseEvent): boolean {
     return true;
 }
 
-export function routeOnLinkClick<ValidRoutes extends string[]>(
+export function routeOnLinkClick<
+    ValidRoutes extends string[] = string[],
+    ValidHash extends string = string,
+    ValidSearch extends Record<string, string> = Record<string, string>,
+>(
     mouseEvent: MouseEvent,
-    routes: Readonly<FullRoute<ValidRoutes>>,
+    routes: Readonly<FullRoute<ValidRoutes, ValidSearch, ValidHash>>,
     router: SpaRouter<ValidRoutes>,
 ) {
     if (shouldMouseEventTriggerRoutes(mouseEvent)) {

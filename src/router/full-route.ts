@@ -1,17 +1,22 @@
-export type FullRoute<ValidRoutes extends string[]> = {
+export type FullRoute<
+    ValidRoutes extends string[] = string[],
+    ValidSearch extends Record<string, string> = Record<string, string>,
+    ValidHash extends string = string,
+> = {
     paths: Readonly<ValidRoutes>;
-    search?: URLSearchParams | undefined;
-    hash?: string | undefined;
+    search?: ValidSearch | undefined;
+    hash?: ValidHash | undefined;
 };
 
-export function isFullRoute<ValidRoutes extends string[]>(
+export function isFullRoute(
     input: any,
-): input is FullRoute<ValidRoutes> {
+): input is FullRoute<string[], Record<string, string>, string> {
     const validHash = input.hasOwnProperty('hash')
         ? input.hash === undefined || typeof input.hash === 'string'
         : true;
     const validSearch = input.hashOwnProperty('search')
-        ? input.search instanceof URLSearchParams || input.search === undefined
+        ? typeof input.search === 'object' ||
+          Object.keys(input.search).every((key) => typeof input.search[key] === 'string')
         : true;
     const validPaths =
         input.hasOwnProperty('paths') &&

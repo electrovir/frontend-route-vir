@@ -2,6 +2,7 @@ import {getEnumTypedValues, randomString} from 'augment-vir';
 import {defineFunctionalElement, ElementEvent, eventInit, html, onDomCreated} from 'element-vir';
 import {RouteListener, routeOnLinkClick, SpaRouter} from '../../';
 import {FullRoute} from '../../router/full-route';
+import {urlSearchParamsToObject} from '../../search-params';
 import {MainRoute, testRouter, TestRoutes} from '../test-router';
 
 function routeClicked(
@@ -65,7 +66,9 @@ export const NavElement = defineFunctionalElement({
                 <button
                     @click=${() => {
                         props.router.setRoutes({
-                            search: new URLSearchParams(`${randomString(3)}=${randomString(3)}`),
+                            search: urlSearchParamsToObject(
+                                new URLSearchParams(`${randomString(3)}=${randomString(3)}`),
+                            ),
                         });
                     }}
                 >

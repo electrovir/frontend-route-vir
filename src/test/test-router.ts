@@ -11,22 +11,42 @@ export enum MainRoute {
 
 export type TestRoutes = [MainRoute] | [MainRoute, string];
 
-const defaultRoute: FullRoute<TestRoutes> = {paths: [MainRoute.Home, 'main']};
+const defaultRoute: FullRoute<TestRoutes, Record<string, string>, string> = {
+    paths: [MainRoute.Home, 'main'],
+};
 
-export const testRouter = createSpaRouter<TestRoutes>({
+export const testRouter = createSpaRouter<TestRoutes, Record<string, string>, string>({
     routeSanitizer: (fullRoute) => {
         if (!fullRoute.paths.length) {
-            return defaultRoute;
+            return {...(fullRoute as any), defaultRoute};
         }
+
         const mainRoute = fullRoute.paths[0];
         if (!isEnumValue(mainRoute, MainRoute)) {
-            return defaultRoute;
+            return {...(fullRoute as any), defaultRoute};
         }
 
         const secondaryRoute = fullRoute.paths[1];
         const sanitizedRoutes: TestRoutes =
             typeof secondaryRoute === 'string' ? [mainRoute, secondaryRoute] : [mainRoute];
 
-        return {...fullRoute, paths: sanitizedRoutes};
+        // restrict hash string length to 3 (excluding the # symbol
+        const sanitizedHash: string | undefined =
+            fullRoute.hash?.replace(/^#/, '').length === 3 ? (fullRoute.hash as string) : undefined;
+
+        // restrict search object key and value lengths to 3
+        const sanitizedSearch = Object.keys(fullRoute.search || {}).every(
+            (key) => key.length === 3 && fullRoute.search?.[key]?.length === 3,
+        )
+            ? (fullRoute.search as Record<string, string>)
+            : undefined;
+
+        const sanitizedRoute = {
+            search: sanitizedSearch,
+            hash: sanitizedHash,
+            paths: sanitizedRoutes,
+        };
+
+        return sanitizedRoute;
     },
 });

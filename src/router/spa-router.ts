@@ -1,11 +1,17 @@
 import type {FullRoute} from './full-route';
 import {RouterInitParams} from './router-init-params';
 
-export type RouteListener<ValidRoutes extends string[]> = (
-    routes: Readonly<FullRoute<ValidRoutes>>,
-) => void;
+export type RouteListener<
+    ValidRoutes extends string[] = string[],
+    ValidSearch extends Record<string, string> = Record<string, string>,
+    ValidHash extends string = string,
+> = (routes: Readonly<FullRoute<ValidRoutes, ValidSearch, ValidHash>>) => void;
 
-export type SpaRouter<ValidRoutes extends string[]> = {
+export type SpaRouter<
+    ValidRoutes extends string[] = string[],
+    ValidSearch extends Record<string, string> = Record<string, string>,
+    ValidHash extends string = string,
+> = {
     addRouteListener: (
         /**
          * Immediately fire the listener callback once its attached. This prevents you from needing
@@ -15,9 +21,9 @@ export type SpaRouter<ValidRoutes extends string[]> = {
         fireImmediately: boolean,
         listener: RouteListener<ValidRoutes>,
     ) => RouteListener<ValidRoutes>;
-    createRoutesUrl: (routes: Readonly<FullRoute<string[]>>) => string;
-    getCurrentRawRoutes: () => Readonly<FullRoute<string[]>>;
-    initParams: Readonly<RouterInitParams<ValidRoutes>>;
+    createRoutesUrl: (routes: Readonly<FullRoute>) => string;
+    getCurrentRawRoutes: () => Readonly<FullRoute>;
+    initParams: Readonly<RouterInitParams<ValidRoutes, ValidSearch, ValidHash>>;
     listeners: Set<RouteListener<ValidRoutes>>;
     /** Used to track route sanitization depth to prevent infinite sanitizing loops. */
     sanitizationDepth: number;
@@ -27,8 +33,8 @@ export type SpaRouter<ValidRoutes extends string[]> = {
      * sanitizer to the init parameters, this simply returns the inputs.
      */
     sanitizeFullRoute: (
-        fullRoute: Readonly<FullRoute<string[]>>,
-    ) => Readonly<FullRoute<ValidRoutes>>;
+        fullRoute: Readonly<FullRoute>,
+    ) => Readonly<FullRoute<ValidRoutes, ValidSearch, ValidHash>>;
     /**
      * Manually update the current route. This will fire event listeners once the browser URL update
      * is finalized and the browser fires its relevant events.
@@ -38,7 +44,7 @@ export type SpaRouter<ValidRoutes extends string[]> = {
          * Route to set. This is partial so that only parts can be applied. Any missing properties
          * from the FullRoute type will simply not be changed.
          */
-        routes: Partial<Readonly<FullRoute<ValidRoutes>>>,
+        routes: Partial<Readonly<FullRoute<ValidRoutes, ValidSearch, ValidHash>>>,
         /**
          * Used for a back button or when replacing routes with sanitized routes. In every other
          * case, pass false here or leave it empty (it defaults to false).

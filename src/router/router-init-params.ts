@@ -1,11 +1,17 @@
 import {InvalidRouterInitParamsError} from './errors/invalid-router-init-params.error';
 import type {FullRoute} from './full-route';
 
-export type RouteSanitizerCallback<ValidRoutes extends string[]> = (
-    params: Readonly<FullRoute<string[]>>,
-) => Readonly<FullRoute<ValidRoutes>>;
+export type RouteSanitizerCallback<
+    ValidRoutes extends string[] = string[],
+    ValidSearch extends Record<string, string> = Record<string, string>,
+    ValidHash extends string = string,
+> = (params: Readonly<FullRoute>) => Readonly<FullRoute<ValidRoutes, ValidSearch, ValidHash>>;
 
-export type RouterInitParams<ValidRoutes extends string[]> = {
+export type RouterInitParams<
+    ValidRoutes extends string[] = string[],
+    ValidSearch extends Record<string, string> = Record<string, string>,
+    ValidHash extends string = string,
+> = {
     /**
      * RouteBase: this can used to provide a base route for the router to consider the root. This
      * must NOT also be a valid route or things will go totally screwy.
@@ -22,7 +28,7 @@ export type RouterInitParams<ValidRoutes extends string[]> = {
      * RouteSanitizer: this can be used to rewrite invalid routes before any router listener
      * callbacks are fired.
      */
-    routeSanitizer?: RouteSanitizerCallback<ValidRoutes> | undefined;
+    routeSanitizer?: RouteSanitizerCallback<ValidRoutes, ValidSearch, ValidHash> | undefined;
     /**
      * Used mostly for debugging purposes to prevent yourself from accidentally adding tons of event
      * listeners. When left undefined or set to zero, this property isn't used at all and there is
@@ -32,12 +38,16 @@ export type RouterInitParams<ValidRoutes extends string[]> = {
 };
 
 // some actual JavaScript is needed so this file gets picked up in compilation lol
-export function createRouteInitParams<ValidRoutes extends string[]>(
+export function createRouteInitParams<
+    ValidRoutes extends string[],
+    ValidSearch extends Record<string, string>,
+    ValidHash extends string,
+>(
     routeBase?: string,
-    routeSanitizer?: RouteSanitizerCallback<ValidRoutes>,
+    routeSanitizer?: RouteSanitizerCallback<ValidRoutes, ValidSearch, ValidHash>,
     maxListenerCount?: number,
-): RouterInitParams<ValidRoutes> {
-    const routerInitParams: RouterInitParams<ValidRoutes> = {
+): RouterInitParams<ValidRoutes, ValidSearch, ValidHash> {
+    const routerInitParams: RouterInitParams<ValidRoutes, ValidSearch, ValidHash> = {
         routeBase,
         maxListenerCount,
         routeSanitizer,
@@ -46,9 +56,13 @@ export function createRouteInitParams<ValidRoutes extends string[]>(
     return routerInitParams;
 }
 
-export function assertValidRouteInitParams<ValidRoutes extends string[]>(
-    input: RouterInitParams<ValidRoutes>,
-): asserts input is RouterInitParams<ValidRoutes> {
+export function assertValidRouteInitParams<
+    ValidRoutes extends string[],
+    ValidSearch extends Record<string, string>,
+    ValidHash extends string,
+>(
+    input: RouterInitParams<ValidRoutes, ValidSearch, ValidHash>,
+): asserts input is RouterInitParams<ValidRoutes, ValidSearch, ValidHash> {
     if (
         'routeBase' in input &&
         typeof input.routeBase !== 'string' &&
