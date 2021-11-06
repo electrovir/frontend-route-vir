@@ -8,3 +8,11 @@ export const testRouter = createSpaRouter<string[], Record<string, string>, Test
 
 // @ts-expect-error
 testRouter.setRoutes({hash: 'derp'});
+// @ts-expect-error
+testRouter.setRoutes({search: undefined});
+// @ts-expect-error
+testRouter.setRoutes({hash: undefined});
+
+testRouter.addRouteListener(true, (fullRoute) => {
+    fullRoute.hash;
+});

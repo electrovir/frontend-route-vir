@@ -26,8 +26,8 @@ export function shouldMouseEventTriggerRoutes(mouseEvent: MouseEvent): boolean {
 
 export function routeOnLinkClick<
     ValidRoutes extends string[] = string[],
-    ValidHash extends string = string,
-    ValidSearch extends Record<string, string> = Record<string, string>,
+    ValidHash extends string | undefined = string | undefined,
+    ValidSearch extends Record<string, string> | undefined = Record<string, string> | undefined,
 >(
     mouseEvent: MouseEvent,
     routes: Readonly<FullRoute<ValidRoutes, ValidSearch, ValidHash>>,

@@ -11,11 +11,11 @@ export enum MainRoute {
 
 export type TestRoutes = [MainRoute] | [MainRoute, string];
 
-const defaultRoute: FullRoute<TestRoutes, Record<string, string>, string> = {
+const defaultRoute: FullRoute<TestRoutes> = {
     paths: [MainRoute.Home, 'main'],
 };
 
-export const testRouter = createSpaRouter<TestRoutes, Record<string, string>, string>({
+export const testRouter = createSpaRouter<TestRoutes>({
     routeSanitizer: (fullRoute) => {
         if (!fullRoute.paths.length) {
             return {...(fullRoute as any), defaultRoute};

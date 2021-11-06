@@ -3,14 +3,16 @@ import type {FullRoute} from './full-route';
 
 export type RouteSanitizerCallback<
     ValidRoutes extends string[] = string[],
-    ValidSearch extends Record<string, string> = Record<string, string>,
-    ValidHash extends string = string,
-> = (params: Readonly<FullRoute>) => Readonly<FullRoute<ValidRoutes, ValidSearch, ValidHash>>;
+    ValidSearch extends Record<string, string> | undefined = Record<string, string> | undefined,
+    ValidHash extends string | undefined = string | undefined,
+> = (
+    params: Required<Readonly<FullRoute>>,
+) => Required<Readonly<FullRoute<ValidRoutes, ValidSearch, ValidHash>>>;
 
 export type RouterInitParams<
     ValidRoutes extends string[] = string[],
-    ValidSearch extends Record<string, string> = Record<string, string>,
-    ValidHash extends string = string,
+    ValidSearch extends Record<string, string> | undefined = Record<string, string> | undefined,
+    ValidHash extends string | undefined = string | undefined,
 > = {
     /**
      * RouteBase: this can used to provide a base route for the router to consider the root. This
@@ -40,8 +42,8 @@ export type RouterInitParams<
 // some actual JavaScript is needed so this file gets picked up in compilation lol
 export function createRouteInitParams<
     ValidRoutes extends string[],
-    ValidSearch extends Record<string, string>,
-    ValidHash extends string,
+    ValidSearch extends Record<string, string> | undefined,
+    ValidHash extends string | undefined,
 >(
     routeBase?: string,
     routeSanitizer?: RouteSanitizerCallback<ValidRoutes, ValidSearch, ValidHash>,
@@ -58,8 +60,8 @@ export function createRouteInitParams<
 
 export function assertValidRouteInitParams<
     ValidRoutes extends string[],
-    ValidSearch extends Record<string, string>,
-    ValidHash extends string,
+    ValidSearch extends Record<string, string> | undefined,
+    ValidHash extends string | undefined,
 >(
     input: RouterInitParams<ValidRoutes, ValidSearch, ValidHash>,
 ): asserts input is RouterInitParams<ValidRoutes, ValidSearch, ValidHash> {

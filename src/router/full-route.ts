@@ -1,11 +1,11 @@
 export type FullRoute<
     ValidRoutes extends string[] = string[],
-    ValidSearch extends Record<string, string> = Record<string, string>,
-    ValidHash extends string = string,
+    ValidSearch extends Record<string, string> | undefined = Record<string, string> | undefined,
+    ValidHash extends string | undefined = string | undefined,
 > = {
     paths: Readonly<ValidRoutes>;
-    search?: ValidSearch | undefined;
-    hash?: ValidHash | undefined;
+    search?: ValidSearch;
+    hash?: ValidHash;
 };
 
 export function isFullRoute(

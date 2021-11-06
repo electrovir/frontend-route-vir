@@ -7,8 +7,8 @@ import {RouteListener, SpaRouter} from './spa-router';
 const maxSanitizationStackDepth = 6;
 export function routeChangeCallback<
     ValidRoutes extends string[] = string[],
-    ValidSearch extends Record<string, string> = Record<string, string>,
-    ValidHash extends string = string,
+    ValidSearch extends Record<string, string> | undefined = Record<string, string> | undefined,
+    ValidHash extends string | undefined = string | undefined,
 >(
     router: SpaRouter<ValidRoutes, ValidSearch, ValidHash>,
     specificListenerOnly?: RouteListener<ValidRoutes, ValidSearch, ValidHash>,
@@ -22,8 +22,9 @@ export function routeChangeCallback<
         );
     }
 
-    const sanitizedCurrentRoutes: Readonly<FullRoute<ValidRoutes, ValidSearch, ValidHash>> =
-        router.sanitizeFullRoute(currentRoutes);
+    const sanitizedCurrentRoutes: Required<
+        Readonly<FullRoute<ValidRoutes, ValidSearch, ValidHash>>
+    > = router.sanitizeFullRoute(currentRoutes);
 
     if (areRoutesEqual(sanitizedCurrentRoutes, currentRoutes)) {
         router.sanitizationDepth = 0;

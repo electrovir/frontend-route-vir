@@ -1,7 +1,7 @@
 import {urlSearchParamsToObject} from '../search-params';
 import type {FullRoute} from './full-route';
 
-export function getFullRoute(routeBaseRegExp: RegExp | undefined): Readonly<FullRoute> {
+export function getFullRoute(routeBaseRegExp: RegExp | undefined): Required<Readonly<FullRoute>> {
     // remove the relative base if it exists
     const windowPath = routeBaseRegExp
         ? window.location.pathname.replace(routeBaseRegExp, '')

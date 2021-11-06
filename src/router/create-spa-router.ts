@@ -10,8 +10,8 @@ import {SpaRouter} from './spa-router';
 
 export function createSpaRouter<
     ValidRoutes extends string[] = string[],
-    ValidSearch extends Record<string, string> = Record<string, string>,
-    ValidHash extends string = string,
+    ValidSearch extends Record<string, string> | undefined = Record<string, string> | undefined,
+    ValidHash extends string | undefined = string | undefined,
 >(
     init: Readonly<RouterInitParams<ValidRoutes, ValidSearch, ValidHash>> = {},
 ): Readonly<SpaRouter<ValidRoutes, ValidSearch, ValidHash>> {
@@ -31,10 +31,16 @@ export function createSpaRouter<
     const router: SpaRouter<ValidRoutes, ValidSearch, ValidHash> = {
         listeners: new Set(),
         initParams: init,
-        sanitizeFullRoute: (fullRoute) => {
+        sanitizeFullRoute: (incomingRoute) => {
+            const fullRoute: Required<Readonly<FullRoute>> = {
+                hash: undefined,
+                search: undefined,
+                ...incomingRoute,
+            };
+
             return init.routeSanitizer
                 ? init.routeSanitizer(fullRoute)
-                : (fullRoute as Readonly<FullRoute<ValidRoutes, ValidSearch, ValidHash>>);
+                : (fullRoute as Required<Readonly<FullRoute<ValidRoutes, ValidSearch, ValidHash>>>);
         },
         setRoutes: (fullRoute, replace = false, force = false) => {
             const currentRoute = router.getCurrentRawRoutes();

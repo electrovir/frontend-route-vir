@@ -3,14 +3,14 @@ import {RouterInitParams} from './router-init-params';
 
 export type RouteListener<
     ValidRoutes extends string[] = string[],
-    ValidSearch extends Record<string, string> = Record<string, string>,
-    ValidHash extends string = string,
-> = (routes: Readonly<FullRoute<ValidRoutes, ValidSearch, ValidHash>>) => void;
+    ValidSearch extends Record<string, string> | undefined = Record<string, string> | undefined,
+    ValidHash extends string | undefined = string | undefined,
+> = (routes: Required<Readonly<FullRoute<ValidRoutes, ValidSearch, ValidHash>>>) => void;
 
 export type SpaRouter<
     ValidRoutes extends string[] = string[],
-    ValidSearch extends Record<string, string> = Record<string, string>,
-    ValidHash extends string = string,
+    ValidSearch extends Record<string, string> | undefined = Record<string, string> | undefined,
+    ValidHash extends string | undefined = string | undefined,
 > = {
     addRouteListener: (
         /**
@@ -22,7 +22,7 @@ export type SpaRouter<
         listener: RouteListener<ValidRoutes, ValidSearch, ValidHash>,
     ) => RouteListener<ValidRoutes, ValidSearch, ValidHash>;
     createRoutesUrl: (routes: Readonly<FullRoute>) => string;
-    getCurrentRawRoutes: () => Readonly<FullRoute>;
+    getCurrentRawRoutes: () => Required<Readonly<FullRoute>>;
     initParams: Readonly<RouterInitParams<ValidRoutes, ValidSearch, ValidHash>>;
     listeners: Set<RouteListener<ValidRoutes, ValidSearch, ValidHash>>;
     /** Used to track route sanitization depth to prevent infinite sanitizing loops. */
@@ -36,7 +36,7 @@ export type SpaRouter<
      */
     sanitizeFullRoute: (
         fullRoute: Readonly<FullRoute>,
-    ) => Readonly<FullRoute<ValidRoutes, ValidSearch, ValidHash>>;
+    ) => Required<Readonly<FullRoute<ValidRoutes, ValidSearch, ValidHash>>>;
     /**
      * Manually update the current route. This will fire event listeners once the browser URL update
      * is finalized and the browser fires its relevant events.
