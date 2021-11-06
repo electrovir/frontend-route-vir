@@ -19,9 +19,11 @@ export const TestAppElement = defineFunctionalElement({
     },
     renderCallback: ({props}) => {
         return html`
-        <${NavElement} ${listen(NavElement.events.routeChange, (event) => {
-            props.currentRoute = event.detail.join('/');
-        })}></${NavElement}>
+            <${NavElement}
+                ${listen(NavElement.events.routeChange, (event) => {
+                    props.currentRoute = event.detail.join('/');
+                })}
+            ></${NavElement}>
             <div>
                 <span>currentRoute: ${props.currentRoute}</span>
             </div>

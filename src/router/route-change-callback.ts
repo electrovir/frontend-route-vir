@@ -1,4 +1,5 @@
 import {SanitizationDepthMaxed} from './errors/sanitization-depth-maxed.error';
+import type {FullRoute} from './full-route';
 import {areRoutesEqual} from './route-equality';
 import {RouteListener, SpaRouter} from './spa-router';
 
@@ -16,7 +17,8 @@ export function routeChangeCallback<ValidRoutes extends string[]>(
         );
     }
 
-    const sanitizedCurrentRoutes = router.sanitizeRoutes(currentRoutes);
+    const sanitizedCurrentRoutes: Readonly<FullRoute<ValidRoutes>> =
+        router.sanitizeFullRoute(currentRoutes);
 
     if (areRoutesEqual(sanitizedCurrentRoutes, currentRoutes)) {
         router.sanitizationDepth = 0;

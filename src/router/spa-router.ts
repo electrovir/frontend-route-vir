@@ -1,5 +1,9 @@
+import type {FullRoute} from './full-route';
 import {RouterInitParams} from './router-init-params';
-export type RouteListener<ValidRoutes extends string[]> = (routes: Readonly<ValidRoutes>) => void;
+
+export type RouteListener<ValidRoutes extends string[]> = (
+    routes: Readonly<FullRoute<ValidRoutes>>,
+) => void;
 
 export type SpaRouter<ValidRoutes extends string[]> = {
     addRouteListener: (
@@ -11,8 +15,8 @@ export type SpaRouter<ValidRoutes extends string[]> = {
         fireImmediately: boolean,
         listener: RouteListener<ValidRoutes>,
     ) => RouteListener<ValidRoutes>;
-    createRoutesUrl: (routes: Readonly<ValidRoutes>) => string;
-    getCurrentRawRoutes: () => Readonly<string[]>;
+    createRoutesUrl: (routes: Readonly<FullRoute<string[]>>) => string;
+    getCurrentRawRoutes: () => Readonly<FullRoute<string[]>>;
     initParams: Readonly<RouterInitParams<ValidRoutes>>;
     listeners: Set<RouteListener<ValidRoutes>>;
     /** Used to track route sanitization depth to prevent infinite sanitizing loops. */
@@ -22,13 +26,19 @@ export type SpaRouter<ValidRoutes extends string[]> = {
      * Used to sanitize routes. Uses the user input sanitizer. If the user did not assign any input
      * sanitizer to the init parameters, this simply returns the inputs.
      */
-    sanitizeRoutes: (routes: Readonly<string[]> | Readonly<ValidRoutes>) => Readonly<ValidRoutes>;
+    sanitizeFullRoute: (
+        fullRoute: Readonly<FullRoute<string[]>>,
+    ) => Readonly<FullRoute<ValidRoutes>>;
     /**
      * Manually update the current route. This will fire event listeners once the browser URL update
      * is finalized and the browser fires its relevant events.
      */
     setRoutes: (
-        routes: Readonly<ValidRoutes>,
+        /**
+         * Route to set. This is partial so that only parts can be applied. Any missing properties
+         * from the FullRoute type will simply not be changed.
+         */
+        routes: Partial<Readonly<FullRoute<ValidRoutes>>>,
         /**
          * Used for a back button or when replacing routes with sanitized routes. In every other
          * case, pass false here or leave it empty (it defaults to false).
@@ -54,7 +64,7 @@ export function isSpaRouter(rawInput: unknown): rawInput is SpaRouter<any> {
         getCurrentRawRoutes: 'function',
         listeners: 'object',
         sanitizationDepth: 'number',
-        sanitizeRoutes: 'function',
+        sanitizeFullRoute: 'function',
         removeRouteListener: 'function',
         initParams: 'object',
     };

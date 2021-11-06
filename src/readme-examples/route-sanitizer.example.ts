@@ -2,6 +2,8 @@ import {createSpaRouter} from '../';
 
 export const routerWithRouteBase = createSpaRouter({
     routeSanitizer: (rawRoutes) => {
-        return rawRoutes.filter((route) => !!route);
+        return {
+            paths: rawRoutes.paths.filter((route) => !!route),
+        };
     },
 });

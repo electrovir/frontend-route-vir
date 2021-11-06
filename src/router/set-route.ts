@@ -1,7 +1,8 @@
 import {SpaRouterError} from './errors/spa-router.error';
+import type {FullRoute} from './full-route';
 
 export function setRoutes(
-    routes: Readonly<string[]>,
+    fullRoute: Readonly<FullRoute<string[]>>,
     routeBaseRegExp: RegExp | undefined,
     routeBase?: string,
     /**
@@ -10,16 +11,16 @@ export function setRoutes(
      */
     replace = false,
 ): void {
-    const path = createPathString(routes, routeBaseRegExp, routeBase);
+    const fullRelativeUrl = createPathString(fullRoute, routeBaseRegExp, routeBase);
     if (replace) {
-        window.history.replaceState(undefined, '', path);
+        window.history.replaceState(undefined, '', fullRelativeUrl);
     } else {
-        window.history.pushState(undefined, '', path);
+        window.history.pushState(undefined, '', fullRelativeUrl);
     }
 }
 
 export function createPathString(
-    routes: Readonly<string[]>,
+    fullRoute: Readonly<FullRoute<string[]>>,
     routeBaseRegExp: RegExp | undefined,
     routeBase = '',
 ): string {
@@ -28,10 +29,16 @@ export function createPathString(
             `Route base regexp was defined but routeBase string was not provided.`,
         );
     }
-    const pathBase = containsRelativeBase(routeBaseRegExp) ? `/${routeBase}` : '';
-    return `${pathBase}/${routes.join('/')}`;
+    const pathBase = doesWindowContainsRelativeBase(routeBaseRegExp) ? `/${routeBase}` : '';
+    const urlParamsString = fullRoute.search?.toString();
+    const searchString = urlParamsString ? `?${urlParamsString}` : '';
+
+    const hashStarter = fullRoute.hash?.startsWith('#') ? '' : '#';
+    const hashString = fullRoute.hash ? `${hashStarter}${fullRoute.hash}` : '';
+
+    return `${pathBase}/${fullRoute.paths.join('/')}${searchString}${hashString}`;
 }
 
-function containsRelativeBase(routeBaseRegExp: RegExp | undefined): boolean {
+function doesWindowContainsRelativeBase(routeBaseRegExp: RegExp | undefined): boolean {
     return !!(routeBaseRegExp && window.location.pathname.match(routeBaseRegExp));
 }

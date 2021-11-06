@@ -1,6 +1,7 @@
 import {consolidateWindowEvents, RouteChangeEventName} from './consolidate-window-events';
 import {SpaRouterError} from './errors/spa-router.error';
-import {getRoutes} from './get-routes';
+import type {FullRoute} from './full-route';
+import {getFullRoute} from './get-route';
 import {routeChangeCallback} from './route-change-callback';
 import {areRoutesEqual} from './route-equality';
 import {assertValidRouteInitParams, RouterInitParams} from './router-init-params';
@@ -11,8 +12,12 @@ export function createSpaRouter<ValidRoutes extends string[] = string[]>(
     init: Readonly<RouterInitParams<ValidRoutes>> = {},
 ): Readonly<SpaRouter<ValidRoutes>> {
     assertValidRouteInitParams(init);
+
     consolidateWindowEvents();
-    const startsWithRouteBaseRegExp: RegExp | undefined = init.routeBase
+
+    const routeBase = init.routeBase?.replace(/\/+$/, '');
+
+    const startsWithRouteBaseRegExp: RegExp | undefined = routeBase
         ? new RegExp(`^\\/${init.routeBase}`)
         : undefined;
 
@@ -22,24 +27,27 @@ export function createSpaRouter<ValidRoutes extends string[] = string[]>(
     const router: SpaRouter<ValidRoutes> = {
         listeners: new Set(),
         initParams: init,
-        sanitizeRoutes: (routes) => {
+        sanitizeFullRoute: (fullRoute) => {
             return init.routeSanitizer
-                ? init.routeSanitizer(routes)
-                : (routes as Readonly<ValidRoutes>);
+                ? init.routeSanitizer(fullRoute)
+                : (fullRoute as Readonly<FullRoute<ValidRoutes>>);
         },
-        setRoutes: (routes, replace = false, force = false) => {
-            const sanitizedRoutes = router.sanitizeRoutes(routes);
+        setRoutes: (fullRoute, replace = false, force = false) => {
+            console.log(fullRoute);
+            const currentRoute = router.getCurrentRawRoutes();
+            const completeRoute: Readonly<FullRoute<string[]>> = {...currentRoute, ...fullRoute};
+            const sanitizedRoute = router.sanitizeFullRoute(completeRoute);
 
-            if (!force && areRoutesEqual(router.getCurrentRawRoutes(), sanitizedRoutes)) {
+            if (!force && areRoutesEqual(currentRoute, sanitizedRoute)) {
                 return;
             }
-            return setRoutes(sanitizedRoutes, startsWithRouteBaseRegExp, init.routeBase, replace);
+            return setRoutes(sanitizedRoute, startsWithRouteBaseRegExp, routeBase, replace);
         },
         createRoutesUrl: (routes) => {
-            return createPathString(routes, startsWithRouteBaseRegExp, init.routeBase);
+            return createPathString(routes, startsWithRouteBaseRegExp, routeBase);
         },
         getCurrentRawRoutes: () => {
-            const rawRoutes = getRoutes(startsWithRouteBaseRegExp);
+            const rawRoutes = getFullRoute(startsWithRouteBaseRegExp);
             return rawRoutes;
         },
         addRouteListener: (fireImmediately, listener) => {

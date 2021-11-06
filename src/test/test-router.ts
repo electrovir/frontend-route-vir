@@ -1,4 +1,5 @@
 import {isEnumValue} from 'augment-vir';
+import type {FullRoute} from '../';
 import {createSpaRouter} from '../';
 
 export enum MainRoute {
@@ -10,22 +11,22 @@ export enum MainRoute {
 
 export type TestRoutes = [MainRoute] | [MainRoute, string];
 
-const defaultRoute: TestRoutes = [MainRoute.Home, 'main'];
+const defaultRoute: FullRoute<TestRoutes> = {paths: [MainRoute.Home, 'main']};
 
 export const testRouter = createSpaRouter<TestRoutes>({
-    routeSanitizer: (routes) => {
-        if (!routes || !routes.length) {
+    routeSanitizer: (fullRoute) => {
+        if (!fullRoute.paths.length) {
             return defaultRoute;
         }
-        const mainRoute = routes[0];
+        const mainRoute = fullRoute.paths[0];
         if (!isEnumValue(mainRoute, MainRoute)) {
             return defaultRoute;
         }
 
-        const secondaryRoute = routes[1];
+        const secondaryRoute = fullRoute.paths[1];
         const sanitizedRoutes: TestRoutes =
             typeof secondaryRoute === 'string' ? [mainRoute, secondaryRoute] : [mainRoute];
 
-        return sanitizedRoutes;
+        return {...fullRoute, paths: sanitizedRoutes};
     },
 });

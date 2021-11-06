@@ -38,7 +38,9 @@ import {createSpaRouter} from 'spa-router-vir';
 
 export const routerWithRouteBase = createSpaRouter({
     routeSanitizer: (rawRoutes) => {
-        return rawRoutes.filter((route) => !!route);
+        return {
+            paths: rawRoutes.paths.filter((route) => !!route),
+        };
     },
 });
 ```
@@ -53,6 +55,7 @@ Supply type information to make your routes more type safe. Make sure to supply 
 
 ```TypeScript
 import {isEnumValue} from 'augment-vir';
+import type {FullRoute} from 'spa-router-vir';
 import {createSpaRouter} from 'spa-router-vir';
 
 export enum MainRoute {
@@ -64,23 +67,23 @@ export enum MainRoute {
 
 export type TestRoutes = [MainRoute] | [MainRoute, string];
 
-const defaultRoute: TestRoutes = [MainRoute.Home, 'main'];
+const defaultRoute: FullRoute<TestRoutes> = {paths: [MainRoute.Home, 'main']};
 
 export const testRouter = createSpaRouter<TestRoutes>({
-    routeSanitizer: (routes) => {
-        if (!routes || !routes.length) {
+    routeSanitizer: (fullRoute) => {
+        if (!fullRoute.paths.length) {
             return defaultRoute;
         }
-        const mainRoute = routes[0];
+        const mainRoute = fullRoute.paths[0];
         if (!isEnumValue(mainRoute, MainRoute)) {
             return defaultRoute;
         }
 
-        const secondaryRoute = routes[1];
+        const secondaryRoute = fullRoute.paths[1];
         const sanitizedRoutes: TestRoutes =
             typeof secondaryRoute === 'string' ? [mainRoute, secondaryRoute] : [mainRoute];
 
-        return sanitizedRoutes;
+        return {...fullRoute, paths: sanitizedRoutes};
     },
 });
 ```
@@ -128,8 +131,7 @@ To create a URL with a given array of routes, use the `createRoutesUrl()` method
 ```TypeScript
 import {superBasicRouter} from './router-creation.example';
 
-document.getElementsByTagName('a')[0]!.href = superBasicRouter.createRoutesUrl([
-    'page1',
-    'sub-page',
-]);
+document.getElementsByTagName('a')[0]!.href = superBasicRouter.createRoutesUrl({
+    paths: ['page1', 'sub-page'],
+});
 ```

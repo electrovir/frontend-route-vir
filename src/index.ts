@@ -5,6 +5,7 @@ export * from './router/errors/invalid-route.error';
 export * from './router/errors/invalid-router-init-params.error';
 export * from './router/errors/sanitization-depth-maxed.error';
 export * from './router/errors/spa-router.error';
+export * from './router/full-route';
 export * from './router/route-equality';
 export * from './router/router-init-params';
 export * from './router/spa-router';

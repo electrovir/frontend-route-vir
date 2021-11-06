@@ -1,3 +1,4 @@
+import {FullRoute} from './router/full-route';
 import {SpaRouter} from './router/spa-router';
 
 /** 0 is left click and the default mouse button if none were read. */
@@ -25,7 +26,7 @@ export function shouldMouseEventTriggerRoutes(mouseEvent: MouseEvent): boolean {
 
 export function routeOnLinkClick<ValidRoutes extends string[]>(
     mouseEvent: MouseEvent,
-    routes: Readonly<ValidRoutes>,
+    routes: Readonly<FullRoute<ValidRoutes>>,
     router: SpaRouter<ValidRoutes>,
 ) {
     if (shouldMouseEventTriggerRoutes(mouseEvent)) {

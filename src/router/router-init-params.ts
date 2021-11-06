@@ -1,7 +1,9 @@
 import {InvalidRouterInitParamsError} from './errors/invalid-router-init-params.error';
+import type {FullRoute} from './full-route';
+
 export type RouteSanitizerCallback<ValidRoutes extends string[]> = (
-    currentRoutes: Readonly<string[]>,
-) => Readonly<ValidRoutes>;
+    params: Readonly<FullRoute<string[]>>,
+) => Readonly<FullRoute<ValidRoutes>>;
 
 export type RouterInitParams<ValidRoutes extends string[]> = {
     /**
