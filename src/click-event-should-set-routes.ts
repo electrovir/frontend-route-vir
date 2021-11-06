@@ -26,12 +26,12 @@ export function shouldMouseEventTriggerRoutes(mouseEvent: MouseEvent): boolean {
 
 export function routeOnLinkClick<
     ValidRoutes extends string[] = string[],
-    ValidHash extends string | undefined = string | undefined,
     ValidSearch extends Record<string, string> | undefined = Record<string, string> | undefined,
+    ValidHash extends string | undefined = string | undefined,
 >(
     mouseEvent: MouseEvent,
     routes: Readonly<FullRoute<ValidRoutes, ValidSearch, ValidHash>>,
-    router: SpaRouter<ValidRoutes>,
+    router: SpaRouter<ValidRoutes, ValidSearch, ValidHash>,
 ) {
     if (shouldMouseEventTriggerRoutes(mouseEvent)) {
         mouseEvent.preventDefault();
