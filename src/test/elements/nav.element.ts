@@ -1,5 +1,5 @@
 import {getEnumTypedValues, randomString} from 'augment-vir';
-import {defineFunctionalElement, ElementEvent, eventInit, html, onDomCreated} from 'element-vir';
+import {defineElementEvent, defineFunctionalElement, html, onDomCreated} from 'element-vir';
 import {RouteListener, routeOnLinkClick, SpaRouter} from '../../';
 import {FullRoute} from '../../router/full-route';
 import {urlSearchParamsToObject} from '../../search-params';
@@ -21,9 +21,9 @@ export const NavElement = defineFunctionalElement({
         routeListener: undefined as undefined | RouteListener<TestRoutes>,
     },
     events: {
-        routeChange: eventInit<Readonly<TestRoutes>>(),
+        routeChange: defineElementEvent<Readonly<TestRoutes>>(),
     },
-    renderCallback: ({props, dispatchElementEvent, events}) => {
+    renderCallback: ({props, dispatch, events}) => {
         return html`
             <nav
                 ${onDomCreated(() => {
@@ -31,15 +31,15 @@ export const NavElement = defineFunctionalElement({
                     // there's something to send events to.
                     if (!props.routeListener) {
                         props.routeListener = props.router.addRouteListener(true, (routes) => {
-                            dispatchElementEvent(
-                                new ElementEvent(events.routeChange, routes.paths),
-                            );
+                            dispatch(new events.routeChange(routes.paths));
                         });
                     }
                 })}
             >
                 ${getEnumTypedValues(MainRoute).map((mainRoute) => {
-                    const routes: Readonly<FullRoute<TestRoutes>> = {paths: [mainRoute]};
+                    const routes: Readonly<FullRoute<TestRoutes>> = {
+                        paths: [mainRoute],
+                    };
                     const path = props.router.createRoutesUrl(routes);
                     const label = mainRoute;
 

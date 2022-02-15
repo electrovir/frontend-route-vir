@@ -9,9 +9,6 @@
 *.test.d.ts
 *.test.js
 dist/test/
-scripts/
-snowpack.config.js
-snowpack.config.mjs
 src/
 static/
 test-repos/
@@ -19,3 +16,6 @@ tsconfig-base.json
 tsconfig.json
 
 dist/readme-examples/
+dist/vite/
+public/
+index.html

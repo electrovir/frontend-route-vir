@@ -12,7 +12,10 @@ export enum MainRoute {
 export type TestRoutes = [MainRoute] | [MainRoute, string];
 
 const defaultRoute: FullRoute<TestRoutes> = {
-    paths: [MainRoute.Home, 'main'],
+    paths: [
+        MainRoute.Home,
+        'main',
+    ],
 };
 
 export const testRouter = createSpaRouter<TestRoutes>({
@@ -28,7 +31,12 @@ export const testRouter = createSpaRouter<TestRoutes>({
 
         const secondaryRoute = fullRoute.paths[1];
         const sanitizedRoutes: TestRoutes =
-            typeof secondaryRoute === 'string' ? [mainRoute, secondaryRoute] : [mainRoute];
+            typeof secondaryRoute === 'string'
+                ? [
+                      mainRoute,
+                      secondaryRoute,
+                  ]
+                : [mainRoute];
 
         // restrict hash string length to 3 (excluding the # symbol
         const sanitizedHash: string | undefined =
