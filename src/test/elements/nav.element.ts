@@ -23,15 +23,17 @@ export const NavElement = defineFunctionalElement({
     events: {
         routeChange: defineElementEvent<Readonly<TestRoutes>>(),
     },
-    renderCallback: ({props, dispatch, events}) => {
+    renderCallback: ({props, dispatch, events, setProps}) => {
         return html`
             <nav
                 ${onDomCreated(() => {
                     // the route listener is attached after the DOM has been created to make sure
                     // there's something to send events to.
                     if (!props.routeListener) {
-                        props.routeListener = props.router.addRouteListener(true, (routes) => {
-                            dispatch(new events.routeChange(routes.paths));
+                        setProps({
+                            routeListener: props.router.addRouteListener(true, (routes) => {
+                                dispatch(new events.routeChange(routes.paths));
+                            }),
                         });
                     }
                 })}

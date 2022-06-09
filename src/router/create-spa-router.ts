@@ -75,6 +75,9 @@ export function createSpaRouter<
             }
             return listener;
         },
+        hasRouteListener: (listener): boolean => {
+            return router.listeners.has(listener);
+        },
         removeRouteListener: (listener) => {
             return router.listeners.delete(listener);
         },

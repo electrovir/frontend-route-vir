@@ -17,11 +17,11 @@ export const TestAppElement = defineFunctionalElement({
     props: {
         currentRoute: '',
     },
-    renderCallback: ({props}) => {
+    renderCallback: ({props, setProps}) => {
         return html`
             <${NavElement}
                 ${listen(NavElement.events.routeChange, (event) => {
-                    props.currentRoute = event.detail.join('/');
+                    setProps({currentRoute: event.detail.join('/')});
                 })}
             ></${NavElement}>
             <div>

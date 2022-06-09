@@ -30,6 +30,9 @@ export type SpaRouter<
     removeRouteListener: (
         listenerToRemove: RouteListener<ValidRoutes, ValidSearch, ValidHash>,
     ) => boolean;
+    hasRouteListener: (
+        listenerToCheck: RouteListener<ValidRoutes, ValidSearch, ValidHash>,
+    ) => boolean;
     /**
      * Used to sanitize routes. Uses the user input sanitizer. If the user did not assign any input
      * sanitizer to the init parameters, this simply returns the inputs.
@@ -69,6 +72,7 @@ export function isSpaRouter(rawInput: unknown): rawInput is SpaRouter<any> {
         setRoutes: 'function',
         createRoutesUrl: 'function',
         addRouteListener: 'function',
+        hasRouteListener: 'function',
         getCurrentRawRoutes: 'function',
         listeners: 'object',
         sanitizationDepth: 'number',
