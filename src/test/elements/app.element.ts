@@ -1,7 +1,8 @@
-import {css, defineFunctionalElement, html, listen} from 'element-vir';
+import {assign, css, defineElementNoInputs, html, listen} from 'element-vir';
+import {defaultTestAppRoutes} from '../test-router';
 import {NavElement} from './nav.element';
 
-export const TestAppElement = defineFunctionalElement({
+export const TestAppElement = defineElementNoInputs({
     tagName: 'vir-spa-router-test-app',
     styles: css`
         :host {
@@ -14,18 +15,21 @@ export const TestAppElement = defineFunctionalElement({
             margin-bottom: 16px;
         }
     `,
-    props: {
-        currentRoute: '',
+    stateInit: {
+        currentRoute: defaultTestAppRoutes,
     },
-    renderCallback: ({props, setProps}) => {
+    renderCallback: ({state, updateState}) => {
         return html`
             <${NavElement}
+                ${assign(NavElement, {
+                    currentRoute: state.currentRoute,
+                })}
                 ${listen(NavElement.events.routeChange, (event) => {
-                    setProps({currentRoute: event.detail.join('/')});
+                    updateState({currentRoute: event.detail});
                 })}
             ></${NavElement}>
             <div>
-                <span>currentRoute: ${props.currentRoute}</span>
+                <span>current main route path: ${state.currentRoute.paths[0]}</span>
             </div>
         `;
     },

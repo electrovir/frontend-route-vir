@@ -1,8 +1,14 @@
 {
+    "extends": "virmator/base-configs/base-tsconfig.json",
     "compilerOptions": {
-        "moduleResolution": "node",
-        // override keyword doesn't work with snowpack
-        "noImplicitOverride": false
+        "outDir": "./dist",
+        "rootDir": "./src"
     },
-    "extends": "./tsconfig-base.json"
+    "exclude": [
+        "./configs",
+        "./coverage",
+        "./dist",
+        "./node_modules",
+        "./test-files"
+    ]
 }

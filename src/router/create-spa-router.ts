@@ -25,7 +25,10 @@ export function createSpaRouter<
         ? new RegExp(`^\\/${init.routeBase}`)
         : undefined;
 
-    /** Only add one listener to the window event but only add it once addRouteListener has been called. */
+    /**
+     * Only add one listener to the window event but only add it once addRouteListener has been
+     * called.
+     */
     let windowListenerAdded = false;
 
     const router: SpaRouter<ValidRoutes, ValidSearch, ValidHash> = {

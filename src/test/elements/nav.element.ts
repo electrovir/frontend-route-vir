@@ -1,55 +1,51 @@
-import {getEnumTypedValues, randomString} from 'augment-vir';
-import {defineElementEvent, defineFunctionalElement, html, onDomCreated} from 'element-vir';
-import {RouteListener, routeOnLinkClick, SpaRouter} from '../../';
-import {FullRoute} from '../../router/full-route';
+import {randomString} from '@augment-vir/browser';
+import {getEnumTypedValues} from '@augment-vir/common';
+import {defineElement, defineElementEvent, html} from 'element-vir';
+import {RouteListener, routeOnLinkClick} from '../../';
+import {areRoutesEqual} from '../../router/route-equality';
 import {urlSearchParamsToObject} from '../../search-params';
-import {MainRoute, testRouter, TestRoutes} from '../test-router';
+import {FullTestAppRoute, MainRoute, TestAppRoutePaths, testRouter} from '../test-router';
 
 function routeClicked(
     clickEvent: MouseEvent,
-    routes: Readonly<FullRoute<TestRoutes>>,
-    router: SpaRouter<TestRoutes>,
+    routes: Readonly<FullTestAppRoute>,
+    router: typeof testRouter,
 ) {
     routeOnLinkClick(clickEvent, routes, router);
 }
 
-export const NavElement = defineFunctionalElement({
+export const NavElement = defineElement<{currentRoute: FullTestAppRoute}>()({
     tagName: 'vir-spa-nav',
-    props: {
+    stateInit: {
         router: testRouter,
-        currentRoute: undefined as undefined | Readonly<TestRoutes>,
-        routeListener: undefined as undefined | RouteListener<TestRoutes>,
+        routeListener: undefined as undefined | RouteListener<TestAppRoutePaths>,
     },
     events: {
-        routeChange: defineElementEvent<Readonly<TestRoutes>>(),
+        routeChange: defineElementEvent<FullTestAppRoute>(),
     },
-    renderCallback: ({props, dispatch, events, setProps}) => {
+    initCallback: ({state, dispatch, events}) => {
+        state.router.addRouteListener(true, (fullRoute) => {
+            dispatch(new events.routeChange(fullRoute));
+        });
+    },
+    renderCallback: ({state, inputs}) => {
+        if (!areRoutesEqual(inputs.currentRoute, state.router.getCurrentRawRoutes())) {
+            state.router.setRoutes(inputs.currentRoute);
+        }
+
         return html`
-            <nav
-                ${onDomCreated(() => {
-                    // the route listener is attached after the DOM has been created to make sure
-                    // there's something to send events to.
-                    if (!props.routeListener) {
-                        setProps({
-                            routeListener: props.router.addRouteListener(true, (routes) => {
-                                dispatch(new events.routeChange(routes.paths));
-                            }),
-                        });
-                    }
-                })}
-            >
+            <nav>
                 ${getEnumTypedValues(MainRoute).map((mainRoute) => {
-                    const routes: Readonly<FullRoute<TestRoutes>> = {
-                        paths: [mainRoute],
-                    };
-                    const path = props.router.createRoutesUrl(routes);
+                    const linkRoute: FullTestAppRoute = {paths: [mainRoute]};
+                    const path = state.router.createRoutesUrl(linkRoute);
                     const label = mainRoute;
 
                     return html`
                         <a
                             href=${path}
+                            data-route-name=${mainRoute}
                             @click=${(clickEvent: MouseEvent) =>
-                                routeClicked(clickEvent, routes, props.router)}
+                                routeClicked(clickEvent, linkRoute, state.router)}
                         >
                             ${label}
                         </a>
@@ -58,7 +54,7 @@ export const NavElement = defineFunctionalElement({
 
                 <button
                     @click=${() => {
-                        props.router.setRoutes({
+                        state.router.setRoutes({
                             hash: randomString(3),
                         });
                     }}
@@ -67,7 +63,7 @@ export const NavElement = defineFunctionalElement({
                 </button>
                 <button
                     @click=${() => {
-                        props.router.setRoutes({
+                        state.router.setRoutes({
                             search: urlSearchParamsToObject(
                                 new URLSearchParams(`${randomString(3)}=${randomString(3)}`),
                             ),
