@@ -8,7 +8,11 @@ import {defaultTestAppRoutes, MainRoute} from './test-router';
 
 describe('routing', () => {
     async function renderApp() {
-        const rendered = await renderFixture(html`<${TestAppElement}></${TestAppElement}>`);
+        const rendered = await renderFixture(
+            html`
+                <${TestAppElement}></${TestAppElement}>
+            `,
+        );
         assert.isTrue(TestAppElement.isStrictInstance(rendered));
         return rendered as (typeof TestAppElement)['instanceType'];
     }
