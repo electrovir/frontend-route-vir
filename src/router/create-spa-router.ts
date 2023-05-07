@@ -63,9 +63,9 @@ export function createSpaRouter<
             return rawRoutes;
         },
         addRouteListener: (fireImmediately, listener) => {
-            if (init.maxListenerCount && router.listeners.size > init.maxListenerCount) {
+            if (init.maxListenerCount && router.listeners.size >= init.maxListenerCount) {
                 throw new SpaRouterError(
-                    `Tried to exceed route listener max of ${init.maxListenerCount}.`,
+                    `Tried to exceed route listener max of '${init.maxListenerCount}'.`,
                 );
             }
             router.listeners.add(listener);
