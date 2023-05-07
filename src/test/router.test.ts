@@ -4,7 +4,7 @@ import {html} from 'element-vir';
 import {TestAppElement} from './elements/app.element';
 import {NavElement} from './elements/nav.element';
 import {clickElement} from './interactions';
-import {defaultTestAppRoutes, MainRoute} from './test-router';
+import {MainRoute, defaultTestAppRoutes} from './test-router';
 
 describe('routing', () => {
     async function renderApp() {

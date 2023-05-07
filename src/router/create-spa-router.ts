@@ -70,7 +70,9 @@ export function createSpaRouter<
             }
             router.listeners.add(listener);
             if (!windowListenerAdded) {
-                globalThis.addEventListener(RouteChangeEventName, () => routeChangeCallback(router));
+                globalThis.addEventListener(RouteChangeEventName, () =>
+                    routeChangeCallback(router),
+                );
                 windowListenerAdded = true;
             }
             if (fireImmediately) {
