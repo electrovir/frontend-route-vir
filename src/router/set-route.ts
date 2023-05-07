@@ -14,9 +14,9 @@ export function setRoutes(
 ): void {
     const fullRelativeUrl = createPathString(fullRoute, routeBaseRegExp, routeBase);
     if (replace) {
-        window.history.replaceState(undefined, '', fullRelativeUrl);
+        globalThis.history.replaceState(undefined, '', fullRelativeUrl);
     } else {
-        window.history.pushState(undefined, '', fullRelativeUrl);
+        globalThis.history.pushState(undefined, '', fullRelativeUrl);
     }
 }
 
@@ -43,5 +43,5 @@ export function createPathString(
 }
 
 function doesWindowContainsRelativeBase(routeBaseRegExp: RegExp | undefined): boolean {
-    return !!(routeBaseRegExp && window.location.pathname.match(routeBaseRegExp));
+    return !!(routeBaseRegExp && globalThis.location.pathname.match(routeBaseRegExp));
 }

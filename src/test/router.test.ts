@@ -23,7 +23,10 @@ describe('routing', () => {
 
     it('should default to home route', async () => {
         await renderApp();
-        assert.strictEqual(window.location.pathname, '/' + defaultTestAppRoutes.paths.join('/'));
+        assert.strictEqual(
+            globalThis.location.pathname,
+            '/' + defaultTestAppRoutes.paths.join('/'),
+        );
     });
 
     it('should change the route path when clicking nav buttons', async () => {
@@ -38,7 +41,7 @@ describe('routing', () => {
             assert.isNotEmpty(routeName);
             assert.include(getEnumTypedValues(MainRoute), routeName);
             await clickElement(linkElement);
-            assert.strictEqual(window.location.pathname, '/' + routeName);
+            assert.strictEqual(globalThis.location.pathname, '/' + routeName);
         });
     });
 });
