@@ -1,6 +1,6 @@
 {
     "name": "spa-router-vir",
-    "version": "2.0.3",
+    "version": "2.1.0",
     "homepage": "https://github.com/electrovir/spa-router-vir",
     "bugs": {
         "url": "https://github.com/electrovir/spa-router-vir/issues"
@@ -43,9 +43,11 @@
         "@web/test-runner-playwright": "^0.10.0",
         "@web/test-runner-visual-regression": "^0.8.0",
         "cspell": "^6.31.1",
-        "element-vir": "^12.4.0",
+        "element-vir": "^12.4.6",
+        "esbuild": "^0.17.19",
         "istanbul-smart-text-reporter": "^1.1.1",
         "markdown-code-example-inserter": "^0.3.0",
+        "npm-check-updates": "^16.10.12",
         "prettier": "^2.8.8",
         "prettier-plugin-interpolated-html-tags": "^0.0.3",
         "prettier-plugin-jsdoc": "^0.4.2",
