@@ -1,26 +1,30 @@
 import {WindowEventConsolidationError} from './errors/consolidation.error';
-export const RouteChangeEventName = 'locationchange' as const;
+export const routeChangeEventName = 'locationchange' as const;
 
-// this should only ever be executed once
-let consolidatedAlready = false;
+declare global {
+    var SPA_ROUTER_VIR_HISTORY_EVENTS_CONSOLIDATED_ALREADY: boolean;
+}
+
+globalThis.SPA_ROUTER_VIR_HISTORY_EVENTS_CONSOLIDATED_ALREADY = false;
 
 const originalPushState = globalThis.history.pushState;
 function newPushState(...args: any) {
     const originalResult = originalPushState.apply(globalThis.history, args);
-    globalThis.dispatchEvent(new Event(RouteChangeEventName));
+    globalThis.dispatchEvent(new Event(routeChangeEventName));
     return originalResult;
 }
 
 const originalReplaceState = globalThis.history.replaceState;
 function newReplaceState(...args: any) {
     const originalResult = originalReplaceState.apply(globalThis.history, args);
-    globalThis.dispatchEvent(new Event(RouteChangeEventName));
+    globalThis.dispatchEvent(new Event(routeChangeEventName));
     return originalResult;
 }
 
 // consolidate url changes to RouteChangeEventName events
 export function consolidateWindowEvents() {
-    if (consolidatedAlready) {
+    // this should only ever be executed once
+    if (globalThis.SPA_ROUTER_VIR_HISTORY_EVENTS_CONSOLIDATED_ALREADY) {
         return;
     }
     if (globalThis.history.pushState === newPushState) {
@@ -33,12 +37,12 @@ export function consolidateWindowEvents() {
             `The consolidation module thinks that window events have not been consolidated yet but globalThis.history.replaceState has already been overridden. Does this module have two copies in your repo?`,
         );
     }
-    consolidatedAlready = true;
+    globalThis.SPA_ROUTER_VIR_HISTORY_EVENTS_CONSOLIDATED_ALREADY = true;
 
     globalThis.history.pushState = newPushState;
     globalThis.history.replaceState = newReplaceState;
 
     globalThis.addEventListener('popstate', () => {
-        globalThis.dispatchEvent(new Event(RouteChangeEventName));
+        globalThis.dispatchEvent(new Event(routeChangeEventName));
     });
 }

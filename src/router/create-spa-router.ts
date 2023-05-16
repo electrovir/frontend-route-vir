@@ -1,10 +1,10 @@
-import {consolidateWindowEvents, RouteChangeEventName} from './consolidate-window-events';
+import {consolidateWindowEvents, routeChangeEventName} from './consolidate-window-events';
 import {SpaRouterError} from './errors/spa-router.error';
 import type {FullRoute} from './full-route';
 import {getFullRoute} from './get-route';
 import {routeChangeCallback} from './route-change-callback';
 import {areRoutesEqual} from './route-equality';
-import {assertValidRouteInitParams, RouterInitParams} from './router-init-params';
+import {RouterInitParams, assertValidRouteInitParams} from './router-init-params';
 import {createPathString, setRoutes} from './set-route';
 import {SpaRouter} from './spa-router';
 
@@ -29,7 +29,8 @@ export function createSpaRouter<
      * Only add one listener to the window event but only add it once addRouteListener has been
      * called.
      */
-    let windowListenerAdded = false;
+    let globalListenerAdded = false;
+    const globalListener = () => routeChangeCallback(router);
 
     const router: SpaRouter<ValidRoutes, ValidSearch, ValidHash> = {
         listeners: new Set(),
@@ -62,6 +63,9 @@ export function createSpaRouter<
             const rawRoutes = getFullRoute(startsWithRouteBaseRegExp);
             return rawRoutes;
         },
+        removeAllRouteListeners() {
+            router.listeners.forEach((listener) => router.removeRouteListener(listener));
+        },
         addRouteListener: (fireImmediately, listener) => {
             if (init.maxListenerCount && router.listeners.size >= init.maxListenerCount) {
                 throw new SpaRouterError(
@@ -69,11 +73,9 @@ export function createSpaRouter<
                 );
             }
             router.listeners.add(listener);
-            if (!windowListenerAdded) {
-                globalThis.addEventListener(RouteChangeEventName, () =>
-                    routeChangeCallback(router),
-                );
-                windowListenerAdded = true;
+            if (!globalListenerAdded) {
+                globalThis.addEventListener(routeChangeEventName, globalListener);
+                globalListenerAdded = true;
             }
             if (fireImmediately) {
                 routeChangeCallback(router, listener);
@@ -84,7 +86,14 @@ export function createSpaRouter<
             return router.listeners.has(listener);
         },
         removeRouteListener: (listener) => {
-            return router.listeners.delete(listener);
+            const removed = router.listeners.delete(listener);
+
+            if (!router.listeners.size) {
+                // if there are no more listeners, remove the global listener
+                globalThis.removeEventListener(routeChangeEventName, globalListener);
+                globalListenerAdded = false;
+            }
+            return removed;
         },
         sanitizationDepth: 0,
     };

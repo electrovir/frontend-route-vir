@@ -30,6 +30,7 @@ export type SpaRouter<
     removeRouteListener: (
         listenerToRemove: RouteListener<ValidRoutes, ValidSearch, ValidHash>,
     ) => boolean;
+    removeAllRouteListeners: () => void;
     hasRouteListener: (
         listenerToCheck: RouteListener<ValidRoutes, ValidSearch, ValidHash>,
     ) => boolean;
@@ -69,16 +70,17 @@ export function isSpaRouter(rawInput: unknown): rawInput is SpaRouter<any> {
         return false;
     }
     const propsToCheck: Record<keyof SpaRouter<any>, string> = {
-        setRoutes: 'function',
-        createRoutesUrl: 'function',
         addRouteListener: 'function',
-        hasRouteListener: 'function',
+        createRoutesUrl: 'function',
         getCurrentRawRoutes: 'function',
+        hasRouteListener: 'function',
+        initParams: 'object',
         listeners: 'object',
+        removeAllRouteListeners: 'function',
+        removeRouteListener: 'function',
         sanitizationDepth: 'number',
         sanitizeFullRoute: 'function',
-        removeRouteListener: 'function',
-        initParams: 'object',
+        setRoutes: 'function',
     };
 
     const input = rawInput as SpaRouter<any>;
