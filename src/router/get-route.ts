@@ -1,11 +1,14 @@
 import {urlSearchParamsToObject} from '../search-params';
 import type {FullRoute} from './full-route';
 
-export function getFullRoute(routeBaseRegExp: RegExp | undefined): Required<Readonly<FullRoute>> {
+export function getFullRoute(routeBase: string): Required<Readonly<FullRoute>> {
+    const pathnameBase = `/${routeBase}`;
+
     // remove the relative base if it exists
-    const windowPath = routeBaseRegExp
-        ? globalThis.location.pathname.replace(routeBaseRegExp, '')
-        : globalThis.location.pathname;
+    const windowPath =
+        routeBase && globalThis.location.pathname.startsWith(pathnameBase)
+            ? globalThis.location.pathname.replace(pathnameBase, '')
+            : globalThis.location.pathname;
     const paths = windowPath.split('/').filter((path) => !!path);
 
     const windowSearch = globalThis.location.search;

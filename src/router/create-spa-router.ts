@@ -2,6 +2,7 @@ import {consolidateWindowEvents, routeChangeEventName} from './consolidate-windo
 import {SpaRouterError} from './errors/spa-router.error';
 import type {FullRoute} from './full-route';
 import {getFullRoute} from './get-route';
+import {getRouteBase} from './route-base';
 import {routeChangeCallback} from './route-change-callback';
 import {areRoutesEqual} from './route-equality';
 import {RouterInitParams, assertValidRouteInitParams} from './router-init-params';
@@ -19,11 +20,12 @@ export function createSpaRouter<
 
     consolidateWindowEvents();
 
-    const routeBase = init.routeBase?.replace(/\/+$/, '');
-
-    const startsWithRouteBaseRegExp: RegExp | undefined = routeBase
-        ? new RegExp(`^\\/${init.routeBase}`)
-        : undefined;
+    const routeBase = init.routeBase
+        ? getRouteBase({
+              routeBase: init.routeBase,
+              windowPath: globalThis.window.location.pathname,
+          })
+        : '';
 
     /**
      * Only add one listener to the window event but only add it once addRouteListener has been
@@ -35,7 +37,7 @@ export function createSpaRouter<
     const router: SpaRouter<ValidRoutes, ValidSearch, ValidHash> = {
         listeners: new Set(),
         initParams: init,
-        sanitizeFullRoute: (incomingRoute) => {
+        sanitizeFullRoute(incomingRoute) {
             const fullRoute: Required<Readonly<FullRoute>> = {
                 hash: undefined,
                 search: undefined,
@@ -46,7 +48,7 @@ export function createSpaRouter<
                 ? init.routeSanitizer(fullRoute)
                 : (fullRoute as Required<Readonly<FullRoute<ValidRoutes, ValidSearch, ValidHash>>>);
         },
-        setRoutes: (fullRoute, replace = false, force = false) => {
+        setRoutes(fullRoute, replace = false, force = false) {
             const currentRoute = router.getCurrentRawRoutes();
             const completeRoute: Readonly<FullRoute> = {...currentRoute, ...fullRoute};
             const sanitizedRoute = router.sanitizeFullRoute(completeRoute);
@@ -54,19 +56,18 @@ export function createSpaRouter<
             if (!force && areRoutesEqual(currentRoute, sanitizedRoute)) {
                 return;
             }
-            return setRoutes(sanitizedRoute, startsWithRouteBaseRegExp, routeBase, replace);
+            return setRoutes(sanitizedRoute, routeBase, replace);
         },
-        createRoutesUrl: (routes) => {
-            return createPathString(routes, startsWithRouteBaseRegExp, routeBase);
+        createRoutesUrl(routes) {
+            return createPathString(routes, routeBase);
         },
-        getCurrentRawRoutes: () => {
-            const rawRoutes = getFullRoute(startsWithRouteBaseRegExp);
-            return rawRoutes;
+        getCurrentRawRoutes() {
+            return getFullRoute(routeBase);
         },
         removeAllRouteListeners() {
             router.listeners.forEach((listener) => router.removeRouteListener(listener));
         },
-        addRouteListener: (fireImmediately, listener) => {
+        addRouteListener(fireImmediately, listener) {
             if (init.maxListenerCount && router.listeners.size >= init.maxListenerCount) {
                 throw new SpaRouterError(
                     `Tried to exceed route listener max of '${init.maxListenerCount}'.`,
@@ -82,10 +83,10 @@ export function createSpaRouter<
             }
             return listener;
         },
-        hasRouteListener: (listener): boolean => {
+        hasRouteListener(listener): boolean {
             return router.listeners.has(listener);
         },
-        removeRouteListener: (listener) => {
+        removeRouteListener(listener) {
             const removed = router.listeners.delete(listener);
 
             if (!router.listeners.size) {

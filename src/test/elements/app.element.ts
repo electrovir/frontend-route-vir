@@ -15,10 +15,10 @@ export const TestAppElement = defineElementNoInputs({
             margin-bottom: 16px;
         }
     `,
-    stateInit: {
+    stateInitStatic: {
         currentRoute: defaultTestAppRoutes,
     },
-    renderCallback: ({state, updateState}) => {
+    renderCallback({state, updateState}) {
         return html`
             <${NavElement}
                 ${assign(NavElement, {

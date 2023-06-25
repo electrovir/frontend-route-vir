@@ -16,19 +16,19 @@ function routeClicked(
 
 export const NavElement = defineElement<{currentRoute: FullTestAppRoute}>()({
     tagName: 'vir-spa-nav',
-    stateInit: {
+    stateInitStatic: {
         router: testRouter,
         routeListener: undefined as undefined | RouteListener<TestAppRoutePaths>,
     },
     events: {
         routeChange: defineElementEvent<FullTestAppRoute>(),
     },
-    initCallback: ({state, dispatch, events}) => {
+    initCallback({state, dispatch, events}) {
         state.router.addRouteListener(true, (fullRoute) => {
             dispatch(new events.routeChange(fullRoute));
         });
     },
-    renderCallback: ({state, inputs}) => {
+    renderCallback({state, inputs}) {
         if (!areRoutesEqual(inputs.currentRoute, state.router.getCurrentRawRoutes())) {
             state.router.setRoutes(inputs.currentRoute);
         }

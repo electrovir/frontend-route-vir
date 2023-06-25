@@ -1,18 +1,18 @@
+import {isTruthy} from '@augment-vir/common';
 import {objectToUrlSearchParams} from '../search-params';
-import {SpaRouterError} from './errors/spa-router.error';
 import type {FullRoute} from './full-route';
+import {doesWindowPathStartWithBaseRoute} from './route-base';
 
 export function setRoutes(
     fullRoute: Readonly<FullRoute>,
-    routeBaseRegExp: RegExp | undefined,
-    routeBase?: string,
+    routeBase: string,
     /**
      * Used for a back button or for replacing routes with sanitized routes. In every other case,
      * pass false here or leave it empty (as it defaults to false).
      */
     replace = false,
 ): void {
-    const fullRelativeUrl = createPathString(fullRoute, routeBaseRegExp, routeBase);
+    const fullRelativeUrl = createPathString(fullRoute, routeBase);
     if (replace) {
         globalThis.history.replaceState(undefined, '', fullRelativeUrl);
     } else {
@@ -20,17 +20,13 @@ export function setRoutes(
     }
 }
 
-export function createPathString(
-    fullRoute: Readonly<FullRoute>,
-    routeBaseRegExp: RegExp | undefined,
-    routeBase = '',
-): string {
-    if (!routeBase && routeBaseRegExp != undefined) {
-        throw new SpaRouterError(
-            `Route base regexp was defined but routeBase string was not provided.`,
-        );
-    }
-    const pathBase = doesWindowContainsRelativeBase(routeBaseRegExp) ? `/${routeBase}` : '';
+export function createPathString(fullRoute: Readonly<FullRoute>, routeBase: string): string {
+    const pathBase = doesWindowPathStartWithBaseRoute({
+        routeBase,
+        windowPath: globalThis.location.pathname,
+    })
+        ? routeBase
+        : '';
     const urlParamsString = fullRoute.search
         ? objectToUrlSearchParams(fullRoute.search).toString()
         : '';
@@ -39,9 +35,10 @@ export function createPathString(
     const hashStarter = fullRoute.hash?.startsWith('#') ? '' : '#';
     const hashString = fullRoute.hash ? `${hashStarter}${fullRoute.hash}` : '';
 
-    return `${pathBase}/${fullRoute.paths.join('/')}${searchString}${hashString}`;
-}
+    const paths = [
+        pathBase,
+        ...fullRoute.paths,
+    ].filter(isTruthy);
 
-function doesWindowContainsRelativeBase(routeBaseRegExp: RegExp | undefined): boolean {
-    return !!(routeBaseRegExp && globalThis.location.pathname.match(routeBaseRegExp));
+    return `/${paths.join('/')}${searchString}${hashString}`;
 }
