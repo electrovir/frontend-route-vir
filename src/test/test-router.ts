@@ -23,6 +23,7 @@ export const defaultTestAppRoutes: FullTestAppRoute = {
 };
 
 export const testRouter = createSpaRouter<TestAppRoutePaths>({
+    routeBase: 'spa-router-vir',
     routeSanitizer: (fullRoute) => {
         if (!fullRoute.paths.length) {
             return {...fullRoute, paths: defaultTestAppRoutes.paths};
