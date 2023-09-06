@@ -1,4 +1,4 @@
-import {assign, css, defineElementNoInputs, html, listen} from 'element-vir';
+import {css, defineElementNoInputs, html, listen} from 'element-vir';
 import {defaultTestAppRoutes} from '../test-router';
 import {NavElement} from './nav.element';
 
@@ -20,10 +20,9 @@ export const TestAppElement = defineElementNoInputs({
     },
     renderCallback({state, updateState}) {
         return html`
-            <${NavElement}
-                ${assign(NavElement, {
-                    currentRoute: state.currentRoute,
-                })}
+            <${NavElement.assign({
+                currentRoute: state.currentRoute,
+            })}
                 ${listen(NavElement.events.routeChange, (event) => {
                     updateState({currentRoute: event.detail});
                 })}

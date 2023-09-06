@@ -17,11 +17,11 @@ describe('routing', () => {
         return rendered as (typeof TestAppElement)['instanceType'];
     }
 
-    it('should render', async () => {
+    it('renders', async () => {
         await renderApp();
     });
 
-    it('should default to home route', async () => {
+    it('defaults to home route', async () => {
         await renderApp();
         assert.strictEqual(
             globalThis.location.pathname,
@@ -29,7 +29,7 @@ describe('routing', () => {
         );
     });
 
-    it('should change the route path when clicking nav buttons', async () => {
+    it('changes the route path when clicking nav buttons', async () => {
         const app = await renderApp();
         const links = Array.from(
             app.shadowRoot!.querySelector(NavElement.tagName)!.shadowRoot!.querySelectorAll('a'),

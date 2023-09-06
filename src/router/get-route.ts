@@ -1,4 +1,4 @@
-import {urlSearchParamsToObject} from '../search-params';
+import {urlToSearchParamsObject} from '@augment-vir/common';
 import type {FullRoute} from './full-route';
 
 export function getFullRoute(routeBase: string): Required<Readonly<FullRoute>> {
@@ -11,9 +11,8 @@ export function getFullRoute(routeBase: string): Required<Readonly<FullRoute>> {
             : globalThis.location.pathname;
     const paths = windowPath.split('/').filter((path) => !!path);
 
-    const windowSearch = globalThis.location.search;
-    const search = windowSearch
-        ? urlSearchParamsToObject(new URLSearchParams(globalThis.location.search))
+    const search = globalThis.location.search
+        ? urlToSearchParamsObject(globalThis.location.toString())
         : undefined;
 
     const hash = globalThis.location.hash || undefined;

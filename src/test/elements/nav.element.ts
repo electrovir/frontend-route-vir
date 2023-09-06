@@ -3,7 +3,6 @@ import {getEnumTypedValues} from '@augment-vir/common';
 import {defineElement, defineElementEvent, html} from 'element-vir';
 import {RouteListener, routeOnLinkClick} from '../../';
 import {areRoutesEqual} from '../../router/route-equality';
-import {urlSearchParamsToObject} from '../../search-params';
 import {FullTestAppRoute, MainRoute, TestAppRoutePaths, testRouter} from '../test-router';
 
 function routeClicked(
@@ -64,9 +63,7 @@ export const NavElement = defineElement<{currentRoute: FullTestAppRoute}>()({
                 <button
                     @click=${() => {
                         state.router.setRoutes({
-                            search: urlSearchParamsToObject(
-                                new URLSearchParams(`${randomString(3)}=${randomString(3)}`),
-                            ),
+                            search: {[randomString(3)]: randomString(3)},
                         });
                     }}
                 >

@@ -1,6 +1,6 @@
 {
     "name": "spa-router-vir",
-    "version": "2.1.2",
+    "version": "3.0.0",
     "homepage": "https://github.com/electrovir/spa-router-vir",
     "bugs": {
         "url": "https://github.com/electrovir/spa-router-vir/issues"
@@ -32,10 +32,10 @@
         "test:types": "tsc --noEmit"
     },
     "devDependencies": {
-        "@augment-vir/browser": "^16.4.2",
-        "@augment-vir/browser-testing": "^16.4.2",
-        "@augment-vir/common": "^16.4.2",
-        "@augment-vir/node-js": "^16.4.2",
+        "@augment-vir/browser": "^18.0.0",
+        "@augment-vir/browser-testing": "^18.0.0",
+        "@augment-vir/common": "^18.0.0",
+        "@augment-vir/node-js": "^18.0.0",
         "@istanbuljs/nyc-config-typescript": "^1.0.2",
         "@open-wc/testing": "^3.2.0",
         "@types/mocha": "^10.0.1",
