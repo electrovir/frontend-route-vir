@@ -61,6 +61,16 @@ export const NavElement = defineElement<{currentRoute: FullTestAppRoute}>()({
                     add hash
                 </button>
                 <button
+                    class="add-encoded-character"
+                    @click=${() => {
+                        state.router.setRoutes({
+                            search: {key: '%23'},
+                        });
+                    }}
+                >
+                    add encoded character
+                </button>
+                <button
                     @click=${() => {
                         state.router.setRoutes({
                             search: {[randomString(3)]: randomString(3)},

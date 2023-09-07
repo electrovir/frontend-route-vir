@@ -1,3 +1,4 @@
+import {typedAssertInstanceOf} from '@augment-vir/browser-testing';
 import {awaitedForEach, getEnumTypedKeys, getEnumTypedValues} from '@augment-vir/common';
 import {assert, fixture as renderFixture} from '@open-wc/testing';
 import {html} from 'element-vir';
@@ -13,20 +14,16 @@ describe('routing', () => {
                 <${TestAppElement}></${TestAppElement}>
             `,
         );
-        assert.isTrue(TestAppElement.isStrictInstance(rendered));
-        return rendered as (typeof TestAppElement)['instanceType'];
-    }
-
-    it('renders', async () => {
-        await renderApp();
-    });
-
-    it('defaults to home route', async () => {
-        await renderApp();
+        typedAssertInstanceOf(rendered, TestAppElement);
         assert.strictEqual(
             globalThis.location.pathname,
             '/' + defaultTestAppRoutes.paths.join('/'),
         );
+        return rendered;
+    }
+
+    it('renders to default route', async () => {
+        await renderApp();
     });
 
     it('changes the route path when clicking nav buttons', async () => {
@@ -43,5 +40,19 @@ describe('routing', () => {
             await clickElement(linkElement);
             assert.strictEqual(globalThis.location.pathname, '/' + routeName);
         });
+    });
+
+    it('does not decode values', async () => {
+        const app = await renderApp();
+
+        const addEncodedCharacterButton = app
+            .shadowRoot!.querySelector(NavElement.tagName)!
+            .shadowRoot!.querySelector('.add-encoded-character');
+
+        typedAssertInstanceOf(addEncodedCharacterButton, HTMLButtonElement);
+
+        await clickElement(addEncodedCharacterButton);
+
+        assert.strictEqual(globalThis.location.search, '?key=%23');
     });
 });
