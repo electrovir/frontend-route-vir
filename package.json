@@ -32,12 +32,12 @@
         "test:types": "tsc --noEmit"
     },
     "dependencies": {
-        "@augment-vir/common": "^18.0.0"
+        "@augment-vir/common": "^18.1.0"
     },
     "devDependencies": {
-        "@augment-vir/browser": "^18.0.0",
-        "@augment-vir/browser-testing": "^18.0.0",
-        "@augment-vir/node-js": "^18.0.0",
+        "@augment-vir/browser": "^18.1.0",
+        "@augment-vir/browser-testing": "^18.1.0",
+        "@augment-vir/node-js": "^18.1.0",
         "@istanbuljs/nyc-config-typescript": "^1.0.2",
         "@open-wc/testing": "^3.2.0",
         "@types/mocha": "^10.0.1",
