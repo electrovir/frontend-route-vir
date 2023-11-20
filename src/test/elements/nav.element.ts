@@ -1,5 +1,4 @@
-import {randomString} from '@augment-vir/browser';
-import {getEnumTypedValues} from '@augment-vir/common';
+import {getEnumTypedValues, randomString} from '@augment-vir/common';
 import {defineElement, defineElementEvent, html} from 'element-vir';
 import {RouteListener, routeOnLinkClick} from '../../';
 import {areRoutesEqual} from '../../router/route-equality';

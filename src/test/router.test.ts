@@ -1,7 +1,7 @@
-import {typedAssertInstanceOf} from '@augment-vir/browser-testing';
 import {awaitedForEach, getEnumTypedKeys, getEnumTypedValues} from '@augment-vir/common';
 import {assert, fixture as renderFixture} from '@open-wc/testing';
 import {html} from 'element-vir';
+import {assertInstanceOf} from 'run-time-assertions';
 import {TestAppElement} from './elements/app.element';
 import {NavElement} from './elements/nav.element';
 import {clickElement} from './interactions';
@@ -9,12 +9,10 @@ import {MainRoute, defaultTestAppRoutes} from './test-router';
 
 describe('routing', () => {
     async function renderApp() {
-        const rendered = await renderFixture(
-            html`
-                <${TestAppElement}></${TestAppElement}>
-            `,
-        );
-        typedAssertInstanceOf(rendered, TestAppElement);
+        const rendered = await renderFixture(html`
+            <${TestAppElement}></${TestAppElement}>
+        `);
+        assertInstanceOf(rendered, TestAppElement);
         assert.strictEqual(
             globalThis.location.pathname,
             '/' + defaultTestAppRoutes.paths.join('/'),
@@ -49,7 +47,7 @@ describe('routing', () => {
             .shadowRoot!.querySelector(NavElement.tagName)!
             .shadowRoot!.querySelector('.add-encoded-character');
 
-        typedAssertInstanceOf(addEncodedCharacterButton, HTMLButtonElement);
+        assertInstanceOf(addEncodedCharacterButton, HTMLButtonElement);
 
         await clickElement(addEncodedCharacterButton);
 
