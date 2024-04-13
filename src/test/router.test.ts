@@ -1,4 +1,9 @@
-import {awaitedForEach, getEnumTypedKeys, getEnumTypedValues} from '@augment-vir/common';
+import {
+    awaitedForEach,
+    getEnumTypedKeys,
+    getEnumTypedValues,
+    waitUntilTruthy,
+} from '@augment-vir/common';
 import {assert, fixture as renderFixture} from '@open-wc/testing';
 import {html} from 'element-vir';
 import {assertInstanceOf} from 'run-time-assertions';
@@ -51,6 +56,14 @@ describe('routing', () => {
 
         await clickElement(addEncodedCharacterButton);
 
-        assert.strictEqual(globalThis.location.search, '?key=%23');
+        await waitUntilTruthy(
+            () => {
+                return globalThis.location.search === '?key=%23';
+            },
+            undefined,
+            {
+                timeout: {milliseconds: 1000},
+            },
+        );
     });
 });

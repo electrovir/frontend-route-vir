@@ -63,7 +63,7 @@ export const NavElement = defineElement<{currentRoute: FullTestAppRoute}>()({
                     class="add-encoded-character"
                     @click=${() => {
                         state.router.setRoutes({
-                            search: {key: '%23'},
+                            search: {key: ['%23']},
                         });
                     }}
                 >
@@ -72,7 +72,7 @@ export const NavElement = defineElement<{currentRoute: FullTestAppRoute}>()({
                 <button
                     @click=${() => {
                         state.router.setRoutes({
-                            search: {[randomString(3)]: randomString(3)},
+                            search: {[randomString(3)]: [randomString(3)]},
                         });
                     }}
                 >

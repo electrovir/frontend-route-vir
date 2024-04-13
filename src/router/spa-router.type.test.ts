@@ -1,10 +1,11 @@
 import {createSpaRouter} from '..';
+import {ValidRoutesBase, ValidSearchBase} from './full-route';
 
 enum TestValidHash {
     thing = '#valid',
 }
 
-export const testRouter = createSpaRouter<string[], Record<string, string>, TestValidHash>();
+export const testRouter = createSpaRouter<ValidRoutesBase, ValidSearchBase, TestValidHash>();
 
 // @ts-expect-error
 testRouter.setRoutes({hash: 'derp'});

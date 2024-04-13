@@ -1,4 +1,5 @@
 import {WindowEventConsolidationError} from './errors/consolidation.error';
+
 export const routeChangeEventName = 'locationchange' as const;
 
 declare global {

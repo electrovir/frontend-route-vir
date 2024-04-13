@@ -106,7 +106,8 @@ export const testRouter = createSpaRouter<TestAppRoutePaths>({
 
         // restrict search object key and value lengths to 3
         const sanitizedSearch = Object.keys(fullRoute.search || {}).every(
-            (key) => key.length === 3 && fullRoute.search?.[key]?.length === 3,
+            (key) =>
+                key.length === 3 && fullRoute.search?.[key]?.every((value) => value.length === 3),
         )
             ? fullRoute.search
             : undefined;
@@ -150,7 +151,7 @@ Use `addRouteListener` to add router listeners. When `true`, the first parameter
 import {superBasicRouter} from './router-creation.example';
 
 superBasicRouter.addRouteListener(true, (routes) => {
-    console.log(routes);
+    console.info(routes);
 });
 ```
 

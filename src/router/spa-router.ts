@@ -1,16 +1,16 @@
-import type {FullRoute} from './full-route';
+import {FullRoute, ValidHashBase, ValidRoutesBase, ValidSearchBase} from './full-route';
 import {RouterInitParams} from './router-init-params';
 
 export type RouteListener<
-    ValidRoutes extends string[] = string[],
-    ValidSearch extends Record<string, string> | undefined = Record<string, string> | undefined,
-    ValidHash extends string | undefined = string | undefined,
+    ValidRoutes extends ValidRoutesBase = ValidRoutesBase,
+    ValidSearch extends ValidSearchBase | undefined = ValidSearchBase | undefined,
+    ValidHash extends ValidHashBase | undefined = ValidHashBase | undefined,
 > = (routes: Required<Readonly<FullRoute<ValidRoutes, ValidSearch, ValidHash>>>) => void;
 
 export type SpaRouter<
-    ValidRoutes extends string[] = string[],
-    ValidSearch extends Record<string, string> | undefined = Record<string, string> | undefined,
-    ValidHash extends string | undefined = string | undefined,
+    ValidRoutes extends ValidRoutesBase = ValidRoutesBase,
+    ValidSearch extends ValidSearchBase | undefined = ValidSearchBase | undefined,
+    ValidHash extends ValidHashBase | undefined = ValidHashBase | undefined,
 > = {
     addRouteListener: (
         /**

@@ -12,7 +12,7 @@ describe(createPathString.name, () => {
                         'there',
                     ],
                     hash: undefined,
-                    search: {thing1: 'a,b,c'},
+                    search: {thing1: ['a,b,c']},
                 },
                 '',
             ],

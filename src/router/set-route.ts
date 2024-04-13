@@ -1,4 +1,5 @@
-import {isTruthy, objectToSearchParamsString} from '@augment-vir/common';
+import {isTruthy} from '@augment-vir/common';
+import {searchParamsToString} from 'url-vir';
 import type {FullRoute} from './full-route';
 import {doesWindowPathStartWithBaseRoute} from './route-base';
 
@@ -26,7 +27,7 @@ export function createPathString(fullRoute: Readonly<FullRoute>, routeBase: stri
     })
         ? routeBase
         : '';
-    const searchString = fullRoute.search ? objectToSearchParamsString(fullRoute.search) : '';
+    const searchString = fullRoute.search ? searchParamsToString(fullRoute.search) : '';
 
     const hashStarter = fullRoute.hash?.startsWith('#') ? '' : '#';
     const hashString = fullRoute.hash ? `${hashStarter}${fullRoute.hash}` : '';

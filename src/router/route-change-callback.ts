@@ -1,14 +1,14 @@
 import {SanitizationDepthMaxed} from './errors/sanitization-depth-maxed.error';
-import type {FullRoute} from './full-route';
+import {FullRoute, ValidHashBase, ValidRoutesBase, ValidSearchBase} from './full-route';
 import {areRoutesEqual} from './route-equality';
 import {RouteListener, SpaRouter} from './spa-router';
 
 // 2 sanitize depth allowed for each property: path, search, hash
 const maxSanitizationStackDepth = 6;
 export function routeChangeCallback<
-    ValidRoutes extends string[] = string[],
-    ValidSearch extends Record<string, string> | undefined = Record<string, string> | undefined,
-    ValidHash extends string | undefined = string | undefined,
+    ValidRoutes extends ValidRoutesBase = ValidRoutesBase,
+    ValidSearch extends ValidSearchBase | undefined = ValidSearchBase | undefined,
+    ValidHash extends ValidHashBase | undefined = ValidHashBase | undefined,
 >(
     router: SpaRouter<ValidRoutes, ValidSearch, ValidHash>,
     specificListenerOnly?: RouteListener<ValidRoutes, ValidSearch, ValidHash>,

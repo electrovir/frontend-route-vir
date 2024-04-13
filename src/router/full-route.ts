@@ -1,16 +1,18 @@
+export type ValidRoutesBase = string[];
+export type ValidSearchBase = Record<string, string[]>;
+export type ValidHashBase = string;
+
 export type FullRoute<
-    ValidRoutes extends string[] = string[],
-    ValidSearch extends Record<string, string> | undefined = Record<string, string> | undefined,
-    ValidHash extends string | undefined = string | undefined,
+    ValidRoutes extends ValidRoutesBase = ValidRoutesBase,
+    ValidSearch extends ValidSearchBase | undefined = ValidSearchBase | undefined,
+    ValidHash extends ValidHashBase | undefined = ValidHashBase | undefined,
 > = {
     paths: Readonly<ValidRoutes>;
     search?: ValidSearch;
     hash?: ValidHash;
 };
 
-export function isFullRoute(
-    input: any,
-): input is FullRoute<string[], Record<string, string>, string> {
+export function isFullRoute(input: any): input is FullRoute {
     const validHash = input.hasOwnProperty('hash')
         ? input.hash === undefined || typeof input.hash === 'string'
         : true;

@@ -1,6 +1,6 @@
 import {consolidateWindowEvents, routeChangeEventName} from './consolidate-window-events';
 import {SpaRouterError} from './errors/spa-router.error';
-import type {FullRoute} from './full-route';
+import {FullRoute, ValidHashBase, ValidRoutesBase, ValidSearchBase} from './full-route';
 import {getFullRoute} from './get-route';
 import {getRouteBase} from './route-base';
 import {routeChangeCallback} from './route-change-callback';
@@ -10,9 +10,9 @@ import {createPathString, setRoutes} from './set-route';
 import {SpaRouter} from './spa-router';
 
 export function createSpaRouter<
-    ValidRoutes extends string[] = string[],
-    ValidSearch extends Record<string, string> | undefined = Record<string, string> | undefined,
-    ValidHash extends string | undefined = string | undefined,
+    ValidRoutes extends ValidRoutesBase = ValidRoutesBase,
+    ValidSearch extends ValidSearchBase | undefined = ValidSearchBase | undefined,
+    ValidHash extends ValidHashBase | undefined = ValidHashBase | undefined,
 >(
     init: Readonly<RouterInitParams<ValidRoutes, ValidSearch, ValidHash>> = {},
 ): Readonly<SpaRouter<ValidRoutes, ValidSearch, ValidHash>> {

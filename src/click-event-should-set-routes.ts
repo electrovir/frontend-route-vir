@@ -1,4 +1,4 @@
-import {FullRoute} from './router/full-route';
+import {FullRoute, ValidHashBase, ValidRoutesBase, ValidSearchBase} from './router/full-route';
 import {SpaRouter} from './router/spa-router';
 
 /** 0 is left click and the default mouse button if none were read. */
@@ -25,9 +25,9 @@ export function shouldMouseEventTriggerRoutes(mouseEvent: MouseEvent): boolean {
 }
 
 export function routeOnLinkClick<
-    ValidRoutes extends string[] = string[],
-    ValidSearch extends Record<string, string> | undefined = Record<string, string> | undefined,
-    ValidHash extends string | undefined = string | undefined,
+    ValidRoutes extends ValidRoutesBase = ValidRoutesBase,
+    ValidSearch extends ValidSearchBase | undefined = ValidSearchBase | undefined,
+    ValidHash extends ValidHashBase | undefined = ValidHashBase | undefined,
 >(
     mouseEvent: MouseEvent,
     routes: Readonly<FullRoute<ValidRoutes, ValidSearch, ValidHash>>,
