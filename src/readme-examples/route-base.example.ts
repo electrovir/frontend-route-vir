@@ -1,3 +1,19 @@
-import {createSpaRouter} from '../';
+import {SpaRouter} from '../';
+import {ValidRouterPaths, sanitizePaths} from './router-creation.example';
 
-export const routerWithRouteBase = createSpaRouter({routeBase: 'spa-router-vir'});
+export const myRouter = new SpaRouter<
+    /** Use the same route type parameters as the earlier example for simplicity. */
+    ValidRouterPaths,
+    undefined,
+    undefined
+>({
+    /** Sue the same route sanitizer as the earlier example for simplicity. */
+    sanitizeRoute(rawRoute) {
+        return {
+            paths: sanitizePaths(rawRoute),
+            search: undefined,
+            hash: undefined,
+        };
+    },
+    basePath: 'my-repo',
+});

@@ -1,8 +1,8 @@
-import {superBasicRouter} from './router-creation.example';
+import {myRouter} from './router-creation.example';
 
-document.getElementsByTagName('a')[0]!.href = superBasicRouter.createRoutesUrl({
+document.getElementsByTagName('a')[0]!.href = myRouter.createRouteUrl({
     paths: [
-        'page1',
-        'sub-page',
+        'gallery',
+        'gallery-id-here',
     ],
 });

@@ -1,0 +1,22 @@
+import {FullRoute} from '..';
+import {myRouter, ValidRouterPaths} from './router-creation.example';
+
+/** Remove a listener with the removal callback. */
+{
+    const removeListener = myRouter.listen(true, (route) => {
+        console.info(route);
+    });
+
+    removeListener();
+}
+
+/** Remove a listener by keeping track of it and passing it in to `removeListener`. */
+{
+    function listenToRoute(route: FullRoute<ValidRouterPaths, undefined, undefined>) {
+        console.info(route);
+    }
+
+    myRouter.listen(true, listenToRoute);
+
+    myRouter.removeListener(listenToRoute);
+}
