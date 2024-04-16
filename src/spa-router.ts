@@ -25,7 +25,7 @@ export class SpaRouter<
     ValidSearch extends ValidSearchBase | undefined = undefined,
     ValidHash extends ValidHashBase | undefined = undefined,
 > {
-    protected innerObservable: Observable<FullRoute<ValidPaths, ValidSearch, ValidHash>>;
+    protected innerObservable: Observable<Required<FullRoute<ValidPaths, ValidSearch, ValidHash>>>;
     /**
      * Removes the `SpaRouter`'s listener to global URL changes. This is used when `.destroy()` is
      * called.
@@ -39,7 +39,9 @@ export class SpaRouter<
         assertValidShape(params, spaRouterParamsShape);
         this.params = {...params};
         const sanitizedCurrentUrl = this.readCurrentRoute();
-        this.innerObservable = new Observable<FullRoute<ValidPaths, ValidSearch, ValidHash>>({
+        this.innerObservable = new Observable<
+            Required<FullRoute<ValidPaths, ValidSearch, ValidHash>>
+        >({
             defaultValue: sanitizedCurrentUrl,
             /** Also consider values unequal so they are always set. */
             equalityCheck: () => false,
@@ -221,7 +223,7 @@ export class SpaRouter<
     public listen(
         fireImmediately: boolean,
         listener: ObservableListener<
-            ExcludeNoUpdate<FullRoute<ValidPaths, ValidSearch, ValidHash>>
+            ExcludeNoUpdate<Required<FullRoute<ValidPaths, ValidSearch, ValidHash>>>
         >,
     ) {
         const maxListenerCount =
@@ -245,7 +247,7 @@ export class SpaRouter<
      */
     public removeListener(
         listener: ObservableListener<
-            ExcludeNoUpdate<FullRoute<ValidPaths, ValidSearch, ValidHash>>
+            ExcludeNoUpdate<Required<FullRoute<ValidPaths, ValidSearch, ValidHash>>>
         >,
     ) {
         return this.innerObservable.removeListener(listener);
