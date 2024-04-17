@@ -3,7 +3,7 @@ import {assertValidShape} from 'object-shape-tester';
 import {ExcludeNoUpdate, Observable, ObservableListener} from 'observavir';
 import {isJsonEqual} from 'run-time-assertions';
 import {listenTo} from 'typed-event-target';
-import {SearchParamStrategy, buildUrl, parseUrl} from 'url-vir';
+import {SearchParamStrategy, buildUrl, joinUrlParts, parseUrl} from 'url-vir';
 import {SanitizationDepthMaxed} from './errors/sanitization-depth-maxed.error';
 import {SpaRouterError} from './errors/spa-router.error';
 import {FullRoute, ValidHashBase, ValidPathsBase, ValidSearchBase} from './full-route';
@@ -83,8 +83,11 @@ export class SpaRouter<
     }
 
     /** Detect if the given route already includes the router's `basePath`. */
-    protected routeIncludesBasePath(route: Readonly<Partial<FullRoute>>): boolean {
-        return route.paths?.[0] === this.params.basePath;
+    protected routeIncludesBasePath(route: Readonly<Partial<Pick<FullRoute, 'paths'>>>): boolean {
+        if (!route.paths || !this.params.basePath) {
+            return false;
+        }
+        return joinUrlParts(...route.paths).startsWith(this.params.basePath);
     }
 
     /** Reads the current route with the sanitizer so it's type safe. */
