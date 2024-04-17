@@ -14,7 +14,7 @@ export type RouteSanitizer<
     ValidHash extends ValidHashBase | undefined = undefined,
 > = (
     rawRoute: Readonly<Required<FullRoute>>,
-) => Required<FullRoute<ValidPaths, ValidSearch, ValidHash>>;
+) => Readonly<Required<FullRoute<ValidPaths, ValidSearch, ValidHash>>>;
 
 /**
  * Used to verify if an object is a valid `SpaRouterParams` instance.
