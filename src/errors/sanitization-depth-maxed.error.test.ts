@@ -1,10 +1,11 @@
-import {assert} from '@open-wc/testing';
-import {SanitizationDepthMaxed} from './sanitization-depth-maxed.error';
+import {assert} from '@augment-vir/assert';
+import {describe, it} from '@augment-vir/test';
+import {SanitizationDepthMaxed} from './sanitization-depth-maxed.error.js';
 
 describe(SanitizationDepthMaxed.name, () => {
     it('includes the class name as the error name', () => {
         const error = new SanitizationDepthMaxed('hi');
-        assert.strictEqual(error.name, 'SanitizationDepthMaxed');
-        assert.strictEqual(error.message, 'hi');
+        assert.strictEquals(error.name, 'SanitizationDepthMaxed');
+        assert.strictEquals(error.message, 'hi');
     });
 });

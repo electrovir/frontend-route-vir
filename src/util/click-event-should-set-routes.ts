@@ -14,8 +14,7 @@ export function shouldClickEventTriggerRouteChange(
         Pick<MouseEvent, 'type' | 'altKey' | 'metaKey' | 'ctrlKey' | 'shiftKey' | 'button'>
     >,
 ): boolean {
-    if (
-        /** Don't trigger a route update for anything other than a click event. */
+    return !(
         (mouseEvent.type !== 'click' && mouseEvent.type !== 'mousedown') ||
         /**
          * Do not trigger a route update if a modifier key was held because the user was intending
@@ -27,8 +26,5 @@ export function shouldClickEventTriggerRouteChange(
         mouseEvent.shiftKey ||
         /** Only route on left click, or if no click button was able to be read. */
         mouseEvent.button !== LeftClickButton
-    ) {
-        return false;
-    }
-    return true;
+    );
 }

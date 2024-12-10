@@ -1,6 +1,6 @@
 import {Overwrite} from '@augment-vir/common';
 import {defineShape, or} from 'object-shape-tester';
-import {FullRoute, ValidHashBase, ValidPathsBase, ValidSearchBase} from './full-route';
+import {FullRoute, ValidHashBase, ValidPathsBase, ValidSearchBase} from './full-route.js';
 
 /**
  * A function that sanitizes a route, ensuring that the raw input matches the type safety of a
@@ -69,13 +69,13 @@ export type SpaRouterParams<
     ValidHash extends ValidHashBase | undefined = undefined,
 > = Overwrite<
     {
-        [Prop in keyof typeof spaRouterParamsShape.runTimeType as undefined extends (typeof spaRouterParamsShape.runTimeType)[Prop]
+        [Prop in keyof typeof spaRouterParamsShape.runtimeType as undefined extends (typeof spaRouterParamsShape.runtimeType)[Prop]
             ? never
-            : Prop]: (typeof spaRouterParamsShape.runTimeType)[Prop];
+            : Prop]: (typeof spaRouterParamsShape.runtimeType)[Prop];
     } & {
-        [Prop in keyof typeof spaRouterParamsShape.runTimeType as undefined extends (typeof spaRouterParamsShape.runTimeType)[Prop]
+        [Prop in keyof typeof spaRouterParamsShape.runtimeType as undefined extends (typeof spaRouterParamsShape.runtimeType)[Prop]
             ? Prop
-            : never]?: (typeof spaRouterParamsShape.runTimeType)[Prop];
+            : never]?: (typeof spaRouterParamsShape.runtimeType)[Prop];
     },
     {
         /**

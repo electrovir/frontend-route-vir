@@ -1,5 +1,5 @@
-import {itCases} from '@augment-vir/browser-testing';
-import {parseUrlIntoRawRoute} from './parse-url';
+import {describe, itCases} from '@augment-vir/test';
+import {parseUrlIntoRawRoute} from './parse-url.js';
 
 describe(parseUrlIntoRawRoute.name, () => {
     itCases(parseUrlIntoRawRoute, [

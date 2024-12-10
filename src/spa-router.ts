@@ -1,19 +1,19 @@
+import {check} from '@augment-vir/assert';
 import {addPrefix} from '@augment-vir/common';
 import {assertValidShape} from 'object-shape-tester';
 import {ExcludeNoUpdate, Observable, ObservableListener} from 'observavir';
-import {isJsonEqual} from 'run-time-assertions';
 import {listenTo} from 'typed-event-target';
-import {SearchParamStrategy, buildUrl, joinUrlParts, parseUrl} from 'url-vir';
-import {SanitizationDepthMaxed} from './errors/sanitization-depth-maxed.error';
-import {SpaRouterError} from './errors/spa-router.error';
-import {FullRoute, ValidHashBase, ValidPathsBase, ValidSearchBase} from './full-route';
-import {SpaRouterParams, spaRouterParamsShape} from './spa-router-params';
-import {shouldClickEventTriggerRouteChange} from './util/click-event-should-set-routes';
+import {SearchParamStrategy, buildUrl, joinUrlPaths, parseUrl} from 'url-vir';
+import {SanitizationDepthMaxed} from './errors/sanitization-depth-maxed.error.js';
+import {SpaRouterError} from './errors/spa-router.error.js';
+import {FullRoute, ValidHashBase, ValidPathsBase, ValidSearchBase} from './full-route.js';
+import {SpaRouterParams, spaRouterParamsShape} from './spa-router-params.js';
+import {shouldClickEventTriggerRouteChange} from './util/click-event-should-set-routes.js';
 import {
     consolidateGlobalUrlEvents,
     globalLocationChangeEventName,
-} from './util/consolidate-global-url-events';
-import {parseUrlIntoRawRoute} from './util/parse-url';
+} from './util/consolidate-global-url-events.js';
+import {parseUrlIntoRawRoute} from './util/parse-url.js';
 
 /**
  * A router for SPAs which allows listening to and setting the window's URL with type safety.
@@ -63,7 +63,7 @@ export class SpaRouter<
 
             const sanitizedRoute = params.sanitizeRoute(rawRoute);
 
-            if (isJsonEqual(sanitizedRoute, rawRoute)) {
+            if (check.jsonEquals(rawRoute, sanitizedRoute)) {
                 this.sanitizationDepth = 0;
                 this.innerObservable.setValue(sanitizedRoute);
             } else {
@@ -87,7 +87,7 @@ export class SpaRouter<
         if (!route.paths || !this.params.basePath) {
             return false;
         }
-        return joinUrlParts(...route.paths).startsWith(this.params.basePath);
+        return joinUrlPaths(...route.paths).startsWith(this.params.basePath);
     }
 
     /** Reads the current route with the sanitizer so it's type safe. */
@@ -183,7 +183,7 @@ export class SpaRouter<
             return false;
         } else if (
             !options.force &&
-            isJsonEqual(parseUrl(globalThis.location.href).fullPath, fullPath)
+            check.jsonEquals(parseUrl(globalThis.location.href).fullPath, fullPath)
         ) {
             return false;
         } else if (options.replace) {

@@ -14,8 +14,8 @@ npm i spa-router-vir
 
 # Examples
 
--   The [GitHub repo for this package](https://github.com/electrovir/spa-router-vir) contains [an example](https://github.com/electrovir/spa-router-vir/tree/main/src/test) which can be tested using `npm start`.
--   The [`threejs-experiments` repo](https://github.com/electrovir/threejs-experiments) utilizes this package.
+- The [GitHub repo for this package](https://github.com/electrovir/spa-router-vir) contains [an example](https://github.com/electrovir/spa-router-vir/tree/main/src/test) which can be tested using `npm start`.
+- The [`threejs-experiments` repo](https://github.com/electrovir/threejs-experiments) utilizes this package.
 
 # Usage
 
@@ -100,7 +100,7 @@ To use SpaRouter on GitHub Pages, you must set a `basePath` property when constr
 
 ```TypeScript
 import {SpaRouter} from 'spa-router-vir';
-import {ValidRouterPaths, sanitizePaths} from './router-creation.example';
+import {ValidRouterPaths, sanitizePaths} from './router-creation.example.js';
 
 export const myRouter = new SpaRouter<
     /** Use the same route type parameters as the earlier example for simplicity. */
@@ -131,7 +131,7 @@ Use `listen` to listen to route changes. When `true`, the first parameter (which
 <!-- example-link: src/readme-examples/listen-to-route-changes.example.ts -->
 
 ```TypeScript
-import {myRouter} from './router-creation.example';
+import {myRouter} from './router-creation.example.js';
 
 myRouter.listen(true, (routes) => {
     console.info(routes);
@@ -144,7 +144,7 @@ Listeners can be removed with the `removeListener()` method, or by calling the r
 
 ```TypeScript
 import {FullRoute} from 'spa-router-vir';
-import {myRouter, ValidRouterPaths} from './router-creation.example';
+import {myRouter, ValidRouterPaths} from './router-creation.example.js';
 
 /** Remove a listener with the removal callback. */
 {
@@ -174,7 +174,7 @@ To create a single URL string for any given route, use the `createRouteUrl()` me
 <!-- example-link: src/readme-examples/create-route-url.example.ts -->
 
 ```TypeScript
-import {myRouter} from './router-creation.example';
+import {myRouter} from './router-creation.example.js';
 
 document.getElementsByTagName('a')[0]!.href = myRouter.createRouteUrl({
     paths: [
@@ -191,7 +191,7 @@ To navigate to a new route, use the `.setRoute()` method. This will first saniti
 <!-- example-link: src/readme-examples/route-navigation.example.ts -->
 
 ```TypeScript
-import {myRouter} from './router-creation.example';
+import {myRouter} from './router-creation.example.js';
 
 myRouter.setRoute({
     paths: [

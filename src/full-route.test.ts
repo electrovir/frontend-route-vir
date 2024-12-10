@@ -1,63 +1,81 @@
-import {itCases} from '@augment-vir/browser-testing';
-import {assertTypeOf} from 'run-time-assertions';
-import {FullRoute, ValidHashBase, ValidPathsBase, ValidSearchBase, isFullRoute} from './full-route';
-import {MockValidPaths} from './spa-router.mock';
+import {assert} from '@augment-vir/assert';
+import {describe, it, itCases} from '@augment-vir/test';
+import {
+    FullRoute,
+    ValidHashBase,
+    ValidPathsBase,
+    ValidSearchBase,
+    isFullRoute,
+} from './full-route.js';
+import {MockValidPaths} from './spa-router.mock.js';
 
 describe('ValidPathsBase', () => {
     it('matches more specific sub types', () => {
-        assertTypeOf<['hello there']>().toBeAssignableTo<ValidPathsBase>();
-        assertTypeOf<[]>().toBeAssignableTo<ValidPathsBase>();
+        assert.tsType<['hello there']>().matches<ValidPathsBase>();
+        assert.tsType<[]>().matches<ValidPathsBase>();
     });
 
     it('only allows strings', () => {
-        assertTypeOf<[number]>().not.toBeAssignableTo<ValidPathsBase>();
-        assertTypeOf<[symbol]>().not.toBeAssignableTo<ValidPathsBase>();
+        assert.tsType<[number]>().notMatches<ValidPathsBase>();
+        assert.tsType<[symbol]>().notMatches<ValidPathsBase>();
     });
 });
 
 describe('ValidSearchBase', () => {
     it('matches more specific sub types', () => {
-        assertTypeOf<{
-            singleValue: [string];
-        }>().toBeAssignableTo<ValidSearchBase>();
-        assertTypeOf<{
-            multiValue: string[];
-        }>().toBeAssignableTo<ValidSearchBase>();
+        assert
+            .tsType<{
+                singleValue: [string];
+            }>()
+            .matches<ValidSearchBase>();
+        assert
+            .tsType<{
+                multiValue: string[];
+            }>()
+            .matches<ValidSearchBase>();
     });
 
     it('blocks individual string values', () => {
-        assertTypeOf<{
-            singleValue: string;
-        }>().not.toBeAssignableTo<ValidSearchBase>();
+        assert
+            .tsType<{
+                singleValue: string;
+            }>()
+            .notMatches<ValidSearchBase>();
     });
 });
 
 describe('ValidHashBase', () => {
     it('matches more specific sub types', () => {
-        assertTypeOf<`hello=there`>().toBeAssignableTo<ValidHashBase>();
+        assert.tsType<`hello=there`>().matches<ValidHashBase>();
     });
 
     it('only allows strings', () => {
-        assertTypeOf<number>().not.toBeAssignableTo<ValidHashBase>();
-        assertTypeOf<symbol>().not.toBeAssignableTo<ValidHashBase>();
+        assert.tsType<number>().notMatches<ValidHashBase>();
+        assert.tsType<symbol>().notMatches<ValidHashBase>();
     });
 });
 
 describe('FullRoute', () => {
     it('restricts a route to its type parameters', () => {
-        assertTypeOf<{
-            paths: ['home'];
-        }>().toBeAssignableTo<FullRoute<MockValidPaths, undefined, undefined>>();
-        assertTypeOf<{
-            paths: ['home'];
-            search: {
-                notAllowedKey: ['not allowed value'];
-            };
-        }>().not.toBeAssignableTo<FullRoute<MockValidPaths, undefined, undefined>>();
-        assertTypeOf<{
-            paths: ['home'];
-            hash: 'derp';
-        }>().not.toBeAssignableTo<FullRoute<MockValidPaths, undefined, undefined>>();
+        assert
+            .tsType<{
+                paths: ['home'];
+            }>()
+            .matches<FullRoute<MockValidPaths, undefined, undefined>>();
+        assert
+            .tsType<{
+                paths: ['home'];
+                search: {
+                    notAllowedKey: ['not allowed value'];
+                };
+            }>()
+            .notMatches<FullRoute<MockValidPaths, undefined, undefined>>();
+        assert
+            .tsType<{
+                paths: ['home'];
+                hash: 'derp';
+            }>()
+            .notMatches<FullRoute<MockValidPaths, undefined, undefined>>();
     });
 });
 

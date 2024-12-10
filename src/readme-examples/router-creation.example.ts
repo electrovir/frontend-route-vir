@@ -1,4 +1,4 @@
-import {FullRoute, SpaRouter} from '../';
+import {FullRoute, SpaRouter} from '../index.js';
 
 export const myRouter = new SpaRouter<
     /** The allowed router paths. */

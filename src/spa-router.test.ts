@@ -1,11 +1,11 @@
+import {assert, waitUntil} from '@augment-vir/assert';
 import {MaybePromise} from '@augment-vir/common';
-import {assert, waitUntil} from '@open-wc/testing';
-import {assertThrows} from 'run-time-assertions';
+import {describe, it} from '@augment-vir/test';
 import {parseUrl} from 'url-vir';
-import {FullRoute, ValidHashBase, ValidPathsBase, ValidSearchBase} from './full-route';
-import {SpaRouter} from './spa-router';
-import {SpaRouterParams} from './spa-router-params';
-import {MockValidPaths, sanitizeMockPaths} from './spa-router.mock';
+import {FullRoute, ValidHashBase, ValidPathsBase, ValidSearchBase} from './full-route.js';
+import {SpaRouterParams} from './spa-router-params.js';
+import {SpaRouter} from './spa-router.js';
+import {MockValidPaths, sanitizeMockPaths} from './spa-router.mock.js';
 
 describe(SpaRouter.name, () => {
     function testRouter<
@@ -21,7 +21,7 @@ describe(SpaRouter.name, () => {
     ) {
         return async () => {
             const hrefBefore = window.location.href;
-            let mockRouter = new SpaRouter<ValidPaths, ValidSearch, ValidHash>({
+            const mockRouter = new SpaRouter<ValidPaths, ValidSearch, ValidHash>({
                 sanitizeRoute(rawRoute) {
                     return {
                         paths: sanitizeMockPaths(rawRoute) as string[] as ValidPaths,
@@ -35,7 +35,7 @@ describe(SpaRouter.name, () => {
             try {
                 await callback(mockRouter, hrefBefore);
             } finally {
-                mockRouter?.destroy();
+                mockRouter.destroy();
             }
         };
     }
@@ -45,9 +45,9 @@ describe(SpaRouter.name, () => {
         testRouter({}, (mockRouter, hrefBefore) => {
             const hrefAfter = window.location.href;
 
-            assert.notStrictEqual(hrefBefore, hrefAfter);
-            assert.strictEqual(parseUrl(window.location.href).pathname, '/home');
-            assert.deepStrictEqual(mockRouter.readCurrentRoute(), {
+            assert.notStrictEquals(hrefBefore, hrefAfter);
+            assert.strictEquals(parseUrl(window.location.href).pathname, '/home');
+            assert.deepEquals(mockRouter.readCurrentRoute(), {
                 hash: undefined,
                 paths: ['home'],
                 search: undefined,
@@ -58,7 +58,7 @@ describe(SpaRouter.name, () => {
     it(
         'sanitizes a route',
         testRouter({}, (mockRouter) => {
-            assert.deepStrictEqual(
+            assert.deepEquals(
                 mockRouter.sanitizeRoute({
                     paths: [
                         'this is not',
@@ -95,13 +95,13 @@ describe(SpaRouter.name, () => {
                 ],
             });
 
-            assert.notStrictEqual(
+            assert.notStrictEquals(
                 sanitizedInvalidUrl,
                 parseUrl(sanitizedInvalidUrl).fullPath,
                 'created url should include more than just the path',
             );
-            assert.strictEqual(parseUrl(sanitizedInvalidUrl).fullPath, '/home');
-            assert.strictEqual(parseUrl(validUrl).fullPath, '/gallery/some id');
+            assert.strictEquals(parseUrl(sanitizedInvalidUrl).fullPath, '/home');
+            assert.strictEquals(parseUrl(validUrl).fullPath, '/gallery/some id');
         }),
     );
 
@@ -120,7 +120,7 @@ describe(SpaRouter.name, () => {
                     ],
                 });
 
-                assert.strictEqual(parseUrl(validUrl).fullPath, '/some-base/gallery/some id');
+                assert.strictEquals(parseUrl(validUrl).fullPath, '/some-base/gallery/some id');
             },
         ),
     );
@@ -135,7 +135,7 @@ describe(SpaRouter.name, () => {
                 ],
             });
 
-            assert.strictEqual(parseUrl(validUrl).fullPath, '/gallery/some id');
+            assert.strictEquals(parseUrl(validUrl).fullPath, '/gallery/some id');
         }),
     );
 
@@ -164,9 +164,9 @@ describe(SpaRouter.name, () => {
                     hash: '#hello-there',
                 });
 
-                assert.strictEqual(parseUrl(validUrl).fullPath, '/about/team#hello-there');
-                assert.strictEqual(parseUrl(globalThis.location.href).fullPath, '/about/team#hi');
-                assert.deepStrictEqual(mockRouter.readCurrentRoute(), {
+                assert.strictEquals(parseUrl(validUrl).fullPath, '/about/team#hello-there');
+                assert.strictEquals(parseUrl(globalThis.location.href).fullPath, '/about/team#hi');
+                assert.deepEquals(mockRouter.readCurrentRoute(), {
                     hash: 'hi',
                     paths: [
                         'about',
@@ -191,11 +191,11 @@ describe(SpaRouter.name, () => {
 
             assert.isFalse(mockRouter.setRoute(newRoute));
 
-            assert.strictEqual(globalThis.location.href, hrefBefore);
-            assert.notStrictEqual(globalThis.location.href, newUrl);
+            assert.strictEquals(globalThis.location.href, hrefBefore);
+            assert.notStrictEquals(globalThis.location.href, newUrl);
 
             globalThis.history.replaceState(undefined, '', '/test');
-            assert.strictEqual(
+            assert.strictEquals(
                 globalThis.location.pathname,
                 '/test',
                 'path should not have gotten sanitized',
@@ -206,18 +206,18 @@ describe(SpaRouter.name, () => {
     it(
         'removes a listener',
         testRouter({isPaused: true}, (mockRouter) => {
-            assert.strictEqual(mockRouter.getListenerCount(), 0);
+            assert.strictEquals(mockRouter.getListenerCount(), 0);
             const removeListener = mockRouter.listen(true, () => {});
-            assert.strictEqual(mockRouter.getListenerCount(), 1);
+            assert.strictEquals(mockRouter.getListenerCount(), 1);
             removeListener();
-            assert.strictEqual(mockRouter.getListenerCount(), 0);
+            assert.strictEquals(mockRouter.getListenerCount(), 0);
         }),
     );
 
     it(
         'blocks multiple listeners by default',
         testRouter({isPaused: true}, (mockRouter) => {
-            assertThrows(() => {
+            assert.throws(() => {
                 mockRouter.listen(true, () => {});
                 mockRouter.listen(true, () => {});
             });
@@ -230,7 +230,7 @@ describe(SpaRouter.name, () => {
             mockRouter.listen(true, () => {});
             mockRouter.listen(true, () => {});
             mockRouter.listen(true, () => {});
-            assertThrows(() => {
+            assert.throws(() => {
                 mockRouter.listen(true, () => {});
             });
         }),
@@ -253,7 +253,7 @@ describe(SpaRouter.name, () => {
                     ],
                 }),
             );
-            assert.lengthOf(events, 1);
+            assert.isLengthExactly(events, 1);
             assert.isFalse(
                 mockRouter.setRoute({
                     paths: [
@@ -263,7 +263,7 @@ describe(SpaRouter.name, () => {
                 }),
             );
 
-            assert.lengthOf(events, 1);
+            assert.isLengthExactly(events, 1);
         }),
     );
 
@@ -283,12 +283,10 @@ describe(SpaRouter.name, () => {
                     ],
                 }),
             );
-            assert.lengthOf(events, 1);
+            assert.isLengthExactly(events, 1);
             globalThis.history.back();
 
-            await waitUntil(() => {
-                return events.length === 2;
-            });
+            await waitUntil.isLengthExactly(2, () => events);
         }),
     );
 
@@ -309,12 +307,10 @@ describe(SpaRouter.name, () => {
                     ],
                 }),
             );
-            assert.lengthOf(events, 1);
+            assert.isLengthExactly(events, 1);
             globalThis.history.back();
 
-            await waitUntil(() => {
-                return events.length === 2;
-            });
+            await waitUntil.isLengthExactly(2, () => events);
         }),
     );
 
@@ -341,8 +337,8 @@ describe(SpaRouter.name, () => {
                 ),
             );
 
-            assert.strictEqual(parseUrl(globalThis.location.href).fullPath, '/about/team');
-            assert.notStrictEqual(hrefBefore, '/about/team');
+            assert.strictEquals(parseUrl(globalThis.location.href).fullPath, '/about/team');
+            assert.notStrictEquals(hrefBefore, '/about/team');
         }),
     );
 
@@ -368,8 +364,8 @@ describe(SpaRouter.name, () => {
                 ),
             );
 
-            assert.notStrictEqual(parseUrl(globalThis.location.href).fullPath, '/about/website');
-            assert.strictEqual(globalThis.location.href, hrefBefore);
+            assert.notStrictEquals(parseUrl(globalThis.location.href).fullPath, '/about/website');
+            assert.strictEquals(globalThis.location.href, hrefBefore);
         }),
     );
 });

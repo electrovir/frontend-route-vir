@@ -1,9 +1,9 @@
-import {assert} from '@open-wc/testing';
+import {assert} from '@augment-vir/assert';
+import {describe, it} from '@augment-vir/test';
 import {assertValidShape} from 'object-shape-tester';
-import {assertTypeOf} from 'run-time-assertions';
-import {FullRoute} from './full-route';
-import {RouteSanitizer, SpaRouterParams, spaRouterParamsShape} from './spa-router-params';
-import {MockValidPaths} from './spa-router.mock';
+import {FullRoute} from './full-route.js';
+import {RouteSanitizer, SpaRouterParams, spaRouterParamsShape} from './spa-router-params.js';
+import {MockValidPaths} from './spa-router.mock.js';
 
 describe('SpaRouterParams', () => {
     it('only requires the sanitizeRoute param', () => {
@@ -14,8 +14,8 @@ describe('SpaRouterParams', () => {
         } as const satisfies SpaRouterParams;
 
         assertValidShape(exampleParams, spaRouterParamsShape);
-        assertTypeOf(exampleParams).toBeAssignableTo<SpaRouterParams>();
-        assertTypeOf({}).not.toBeAssignableTo<SpaRouterParams>();
+        assert.tsType(exampleParams).matches<SpaRouterParams>();
+        assert.tsType({}).notMatches<SpaRouterParams>();
     });
 
     it('allows undefined for all optional params', () => {
@@ -30,7 +30,7 @@ describe('SpaRouterParams', () => {
         } as const satisfies SpaRouterParams;
 
         assertValidShape(exampleParams, spaRouterParamsShape);
-        assertTypeOf(exampleParams).toBeAssignableTo<SpaRouterParams>();
+        assert.tsType(exampleParams).matches<SpaRouterParams>();
     });
 
     it('has correct types for all params', () => {
@@ -44,20 +44,20 @@ describe('SpaRouterParams', () => {
             maxListenerCount: 3,
         };
         assertValidShape(exampleParams, spaRouterParamsShape);
-        assertTypeOf(exampleParams).toBeAssignableTo<SpaRouterParams>();
+        assert.tsType(exampleParams).matches<SpaRouterParams>();
     });
 });
 
 describe('RouteSanitizer', () => {
     it('has the correct input type', () => {
         const sanitizerExample: RouteSanitizer = (input) => {
-            assertTypeOf(input).toEqualTypeOf<Readonly<Required<FullRoute>>>();
+            assert.tsType(input).equals<Readonly<Required<FullRoute>>>();
             return input as any;
         };
     });
 
     it('requires the correct output type', () => {
-        const goodSanitizerExample: RouteSanitizer<MockValidPaths, undefined, undefined> = () => {
+        const goodSanitizerExample: RouteSanitizer<MockValidPaths> = () => {
             return {
                 paths: ['home'],
                 hash: undefined,
@@ -65,9 +65,7 @@ describe('RouteSanitizer', () => {
             };
         };
         // @ts-expect-error: the return type has not been sanitized
-        const badSanitizerExample: RouteSanitizer<MockValidPaths, undefined, undefined> = (
-            input,
-        ) => {
+        const badSanitizerExample: RouteSanitizer<MockValidPaths> = (input) => {
             return input;
         };
     });
@@ -81,6 +79,6 @@ describe('RouteSanitizer', () => {
             ],
             search: undefined,
         };
-        assert.strictEqual(spaRouterParamsShape.defaultValue.sanitizeRoute(route), route);
+        assert.strictEquals(spaRouterParamsShape.defaultValue.sanitizeRoute(route), route);
     });
 });

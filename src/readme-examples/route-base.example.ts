@@ -1,5 +1,5 @@
-import {SpaRouter} from '../';
-import {ValidRouterPaths, sanitizePaths} from './router-creation.example';
+import {SpaRouter} from '../index.js';
+import {ValidRouterPaths, sanitizePaths} from './router-creation.example.js';
 
 export const myRouter = new SpaRouter<
     /** Use the same route type parameters as the earlier example for simplicity. */

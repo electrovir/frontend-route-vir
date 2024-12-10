@@ -1,12 +1,11 @@
-import {getCenterOfElement} from '@augment-vir/browser';
-import {itCases} from '@augment-vir/browser-testing';
-import {MaybePromise, awaitedForEach, waitUntilTruthy} from '@augment-vir/common';
-import {fixture} from '@open-wc/testing';
+import {assert, waitUntil} from '@augment-vir/assert';
+import {MaybePromise, awaitedForEach} from '@augment-vir/common';
+import {describe, itCases, testWeb} from '@augment-vir/test';
+import {getCenterOfElement} from '@augment-vir/web';
 import {sendKeys, sendMouse} from '@web/test-runner-commands';
 import {ClickPayload} from '@web/test-runner-commands/dist/sendMousePlugin';
 import {css, html, listen} from 'element-vir';
-import {assertInstanceOf} from 'run-time-assertions';
-import {shouldClickEventTriggerRouteChange} from './click-event-should-set-routes';
+import {shouldClickEventTriggerRouteChange} from './click-event-should-set-routes.js';
 
 describe(shouldClickEventTriggerRouteChange.name, () => {
     type Action =
@@ -25,7 +24,7 @@ describe(shouldClickEventTriggerRouteChange.name, () => {
     ) {
         let result: boolean | undefined;
 
-        const element = await fixture(html`
+        const element = await testWeb.render(html`
             <div
                 style=${css`
                     height: 200px;
@@ -41,7 +40,7 @@ describe(shouldClickEventTriggerRouteChange.name, () => {
             ></div>
         `);
 
-        assertInstanceOf(element, HTMLDivElement);
+        assert.instanceOf(element, HTMLDivElement);
 
         const cleanupCallbacks: (() => MaybePromise<void>)[] = [];
 
@@ -69,12 +68,16 @@ describe(shouldClickEventTriggerRouteChange.name, () => {
                     });
                 });
 
-                await waitUntilTruthy(() => result != undefined, 'result never got calculated', {
-                    timeout: {
-                        milliseconds: 500,
+                await waitUntil.isNotUndefined(
+                    () => result,
+                    {
+                        timeout: {
+                            milliseconds: 500,
+                        },
                     },
-                });
-            } else if (action.type === 'key-down') {
+                    'result never got calculated',
+                );
+            } else if ((action.type as string) === 'key-down') {
                 await sendKeys({
                     down: action.key,
                 });

@@ -1,5 +1,5 @@
-import {FullRoute} from '..';
-import {myRouter, ValidRouterPaths} from './router-creation.example';
+import {FullRoute} from '../index.js';
+import {myRouter, ValidRouterPaths} from './router-creation.example.js';
 
 /** Remove a listener with the removal callback. */
 {

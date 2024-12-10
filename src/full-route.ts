@@ -17,6 +17,7 @@ export type ValidSearchBase = Record<string, string[]>;
  *
  * @category Types
  */
+// eslint-disable-next-line sonarjs/redundant-type-aliases
 export type ValidHashBase = string;
 
 /**

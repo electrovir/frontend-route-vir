@@ -1,4 +1,4 @@
-import {FullRoute} from './full-route';
+import {FullRoute} from './full-route.js';
 
 export type MockValidPaths =
     | ['home']
